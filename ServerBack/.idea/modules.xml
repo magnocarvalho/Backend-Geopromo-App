@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../GeoPromo/.idea/GeoPromo.iml" filepath="$PROJECT_DIR$/../GeoPromo/.idea/GeoPromo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Luvi/.idea/Luvi.iml" filepath="$PROJECT_DIR$/../Luvi/.idea/Luvi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/geopromoServer.iml" filepath="$PROJECT_DIR$/.idea/geopromoServer.iml" />
+    </modules>
+  </component>
+</project>

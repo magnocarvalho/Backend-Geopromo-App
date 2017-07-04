@@ -1,0 +1,545 @@
+/**
+Author: Vinicius Baroni Soares
+*/
+
+@font-face { 
+	font-family: "OpenSans Light"; 
+	src: url("../fonts/OpenSans-Light.eot"), url("../fonts/OpenSans-Light.ttf");
+	font-weight: lighter; }
+
+
+/**
+* Elementos básicos do HTML
+*/
+body{
+	margin: 0;
+	text-align: center;
+	font-family: 'OpenSans Light', sans-serif;
+	background-color: rgb(250,250,250);
+}
+
+* {
+	outline: none;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+h1, h2, h3, h4, h5, h6{
+	font-weight: lighter;
+}
+
+sup, sub{
+	font-size: 60%;
+}
+
+
+
+/**
+* Área de fundo do header, com cor ou imagem
+*/
+#colorheader{
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 110px;
+	background-color: rgb(60,60,60);
+	z-index: -2;
+}
+	#imageheader{
+		display: block;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 110px;
+		background-size: cover;
+		background-position: center center;
+		opacity: 0.5;
+		z-index: -2;
+	}
+
+
+/**
+* Área do header da página, classes e IDs para itens que o componham e o logo
+*/
+#header{
+	display: block;
+	width: 100%;
+	position: fixed;
+	top: 0;
+	z-index: -1;
+}
+
+	#logoExtenso{
+		display: block;
+		width: 140px;
+		height: 45px;
+		margin: 10px auto;
+		line-height: 60px;
+		text-align: center;
+	}
+
+	#logoGeo{
+		color: rgb(255,165,0);
+		font-weight: normal;
+		margin-right: 0px;
+	}
+	#logoPromo{
+		color: rgb(255,255,255);
+		font-weight: bolder;
+	}
+
+	.txtLogo{
+		font-size: 22pt;
+		font-weight: bolder;
+		line-height: 50px;
+	}
+
+	#header-content{
+		display: block;
+		width: 100%;
+		max-width: 730px;
+		height: 50px;
+		margin: 0 auto;
+	}
+		#header-content *{
+			vertical-align: middle;
+		}
+
+		.icon{
+			display: inline-block;
+			height: 40px;
+			width: 40px;
+			border-radius: 50%;
+			cursor: pointer;			
+			vertical-align: middle;
+		}
+			.icon:active{				
+				background-color: rgba(255,255,255,0.3);
+			}
+
+			.icon:first-child{
+				margin-right: 5px;
+			}
+			.icon:last-child{
+				margin-left: 5px;
+			}
+
+		/**
+		* Ícone de voltar
+		*/
+		.back-icon{
+			display: inline-block;
+			height: 40px;
+			width: 40px;
+			border-radius: 50%;
+			background: url('../images/back.png') left 13px center no-repeat;
+			background-size: 12px auto;
+		}
+
+		/**
+		* Ícone de iníco
+		*/
+		.home-icon{
+			background: url('../images/home.png') center center no-repeat;
+			background-size: 17px auto;
+		}
+
+
+		.headertext{
+			display: block;
+			height: 55px;
+			margin: 10px 15px;
+			border: 0px solid green;
+			color: white;
+			line-height: 55px;
+			font-size: 16pt;
+			text-align: left;
+			vertical-align: middle;
+		}
+			.headertext .texto{
+				display: inline-block;
+				width: calc(100% - 105px);
+				max-height: 55px;
+			}
+			.headertext .texto.umicone{
+				width: calc(100% - 55px);
+			}
+
+	#logo{
+		display: inline-block;
+		width: 55px;
+		height: 70px;
+		background: url(../images/logo.png) no-repeat center center;
+		background-size: 50px auto;
+		margin: 0;
+		padding: 0;
+		cursor: pointer;
+		vertical-align: middle;
+	}
+
+	#headerbg{
+		z-index: 2;
+		width: calc(100% - 10px);
+		height: 60px;
+		position: fixed;
+		top: 0;
+		left: 5px;
+		background-color: rgb(220,220,220);
+	}
+
+/**
+* Bloco para conteúdo
+*/
+.bloco{
+	display: block;
+	width: calc(100% - 20px);
+	background-color: white;
+	z-index: 1;
+	margin: 10px auto 20px;
+	border-radius: 3px;
+	box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+	min-height: 60px;
+	max-width: 730px;
+}
+
+/**
+* Área de conteúdo
+*/
+.container{
+	display: block;
+	width: calc(100% - 20px);
+	z-index: 1;
+	margin-top: 80px;
+	min-height: 60px;
+	max-height: calc(100vh - 110px);
+	overflow-y: auto;
+	padding-bottom: 10px;
+}
+
+
+.textcontent{
+	display: inline-block;
+	margin: 20px auto;
+	padding: 0 15px;
+}
+
+/**
+* Listagem dos anúncios próximos
+*/
+.lista{
+	display: inline-block;
+	border-bottom: 1px solid rgb(230,230,230);
+	width: 100%;
+	max-width: 350px;
+	vertical-align: top;
+	color: rgb(30,30,30);
+	transition: 0.3s;
+	font-size: 90%;
+}
+	.lista:active{
+		background:rgb(220,220,220);
+	}
+	.lista:last-child{
+		border: none;
+	}
+	h2.tituloPromo{
+		margin: 10px; 
+		margin-bottom: 14px;
+		color: rgb(255, 165, 0);
+	}
+		.lista h2.tituloPromo{		
+			display: block;
+			margin-bottom: 5px;
+		}
+
+	p.nomeEmpresa{
+		margin-right: 15px;
+		margin-left: 4px;
+	}
+		.lista p.nomeEmpresa{
+			display: block;
+			margin: 0 auto 25px;
+		}
+
+	/*
+	* Bloco que exibe a distância da posição atual da pessoa
+	*/
+	.dist-block{
+		display: block;	
+		padding-bottom: 10px;
+	}
+		.dist-block.divisor{
+			border-top: 1px solid rgb(240,240,240);
+			padding-top: 15px;
+		}
+
+	.lista .titulobloco{
+		display: block;
+		margin-top: 0;
+		padding-top: 5px;
+		margin-bottom: 20px;
+		text-align: left;
+		padding-left: 20px;
+		padding-bottom: 5px;
+		background-color: rgb(255,215,50);
+	}
+		.lista .titulobloco p.gray{
+			margin-bottom: 5px;
+		}
+
+		
+/**
+* Contador de anúncios próximos na página inicial
+*/
+#cont{
+	cursor: pointer;
+}
+
+#contador{
+	display: block;
+	width: 120px;
+	height: 120px;
+	border-radius: 100%;
+	border: 3px solid rgb(255, 162, 0);
+	color: rgb(255, 162, 0);
+	margin: 20px auto;
+	transition: 0.3s;
+	font-weight: lighter;
+	font-size: 48pt;
+	line-height: 120px;
+}
+
+/**
+* Classes usadas na página do anúncio
+*/
+.descanuncio{
+	display: block;
+	margin: 20px auto 10px;
+	color: rgb(150,150,150);
+	line-height: 170%;
+}
+
+/**
+* Classes usadas para formatar o desconto dado no produto
+*/
+.desconto{
+	display: block;
+	margin: -15px auto 0;
+}
+	.porcentagem{
+		vertical-align: bottom;
+		font-size: 300%;
+	}
+
+
+/**
+* Classes que formatam os valores "De" e "Por" no anúncio
+*/
+.valores{
+	display: block;
+	border: 0px solid black;
+	margin: 0 auto 20px;
+}
+	.valores .meio{
+		display: inline-block;
+		font-size: 10pt;
+		margin: 0 10px;
+	}
+	.valores .meio *{
+		vertical-align: top;
+	}
+
+	.valores .meio:first-child{
+		color: rgb(230,180,180);
+	}
+	.valores .meio:last-child{
+		font-weight: bolder;
+		color: rgb(0, 100, 0);
+	}
+
+	.valores .valor{
+		font-size: 16pt;
+	}
+	.valores .valorDe{
+		text-decoration: line-through;
+	}
+
+
+/**
+* Classes para cores de texto
+*/
+.gray{
+	color: rgb(150,150,150);
+}
+.colorred{
+	color: rgb(230, 0, 0);
+}
+.colororange{
+	color: rgb(255, 160, 0);
+}
+.colordarkblue{
+	color: rgb(0, 90, 160);
+}
+.colorlightblue{
+	color: rgb(0, 200, 240);
+}
+
+
+.textleft{
+	text-align: left;
+}
+.textcenter{
+	text-align: center;
+}
+.mini{
+	font-size: 10pt;
+}
+
+.clickable{
+	cursor: pointer;
+}
+
+.loading-image{
+	display: block;
+	margin: 45px auto;
+	width: 100px;
+	height: 100px;
+	background: url(../images/load.gif) no-repeat center center;
+	background-size: 100px 100px;
+}
+	.load-bottom{
+		position: fixed; 
+		bottom: -40px; 
+		left: 5px; 
+		width: 60px; 
+		height: 60px; 
+		background-size: 60px 60px;
+	}
+
+
+.alert{
+	display: block;
+	max-width: 80%;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px auto;
+}
+	.alert-erro{
+		background-color: rgb(255,240,240);
+		color: rgb(190,0,0);
+	}
+
+/**
+* Botões
+*/
+.btn{	
+	background: rgb(255,162, 0) no-repeat center center;
+	outline: 0;
+	color: rgb(255,255,255);
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+	.btn:active{
+		background-color: rgb(210, 130, 0)
+	}
+
+	.btn-disabled{
+		background-color: rgb(200,200,200);
+	}
+	/**
+	* Botão redondo
+	*/
+	.btn-rounded{
+		width: 50px;
+		height: 50px;
+		color: transparent;
+		background-size: 35px 35px;
+		border-radius: 100%;
+		box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+	}
+	/**
+	* Botão quadrado/retangular tradicional
+	*/
+	.btn-square{
+		padding: 5px 10px;
+		border-radius: 4px;
+		margin: 10px auto;
+		display: inline-block;
+	}
+
+	/**
+	* Botão com ícone de atualização
+	*/
+	.btn-update{
+		background-image: url(../images/update.png);
+		position: fixed;
+		bottom: 15px;
+		right: 15px;
+	}
+
+/**
+* Inputs e campos de entrada
+*/
+.input{
+	display: inline-block;
+	border: 1px solid rgb(180,180,180);
+	padding: 10px;
+	border-radius: 5px;
+	font-size: 95%;
+	font-family: 'OpenSans Light';
+}
+	.input:focus{
+		border-color: rgb(255,165,0);
+	}
+	.input-full{
+		display: block;
+		width: 80%;
+		margin: 5px auto;
+	}
+
+	.input#codigo{
+		text-transform: uppercase;
+	}
+
+/**
+* Impede que o placeholder seja afetado pelo text-transform.
+*/
+::-webkit-input-placeholder { text-transform: none; }
+:-moz-placeholder { text-transform: none; }
+::-moz-placeholder { text-transform: none; }
+:-ms-input-placeholder { text-transform: none; }
+
+/*.imgUsuario{
+	display: inline-block;
+	width: 35px;
+	height: 35px;
+	background-color: rgba(255,165,0,0.8);
+	background-image: url('../images/usuario.png');
+	background-size: 18px auto;
+	background-repeat: no-repeat;
+	background-position: center center;
+	border-radius: 50%;
+	vertical-align: middle;
+	float: left;
+	margin: 20px 10px 10px;
+}*/
+
+
+@media (min-width: 560px){
+	/**
+	* Exibição em duas colunas do resultado dos anúncios próximos para telas maiores
+	* e na horizontal
+	*/
+	.lista, .lista:last-child{
+		width: calc(50% - 30px);
+		margin: 8px;
+		border: 1px solid rgb(235,235,235);
+		border-radius: 3px;
+	}
+}

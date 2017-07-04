@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Vinicius Baroni Soares">
+	<meta name="theme-color" content="rgb(60,60,60)">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link rel="shortcut icon" type="image/png" href="assets/images/logo.png">
+	<script type="text/javascript" src="assets/js/jquery-3.1.0.js"></script>
+	<script type="text/javascript" src="assets/js/scripts.js"></script>
+
+	<title>GeoPromo</title>
+	<script type="text/javascript">
+		window.onload = contaPromos(false);
+
+		/*
+		* Chama a função a cada 30 segundos.
+		*/
+		setInterval(contaPromos, 300000);
+	</script>
+</head>
+<body>
+	<div id="colorheader"></div>
+	<div id="header">
+		<div id="header-content">
+			<!--<span id="logo" onclick="location.href='index.html'"></span>-->
+			<!--<span  onclick="location.href='index.html'">-->
+			<span id="logoExtenso">
+				<span id="logoGeo" class="txtLogo">geo</span><span id="logoPromo" class="txtLogo">promo</span>
+			</span>
+			<!--</span>-->
+		</div>
+	</div>
+
+	<div class="container bloco">
+		<span class="loading-image"></span>
+
+		<div id="cont" style="display: none;" onclick="location.href='lista.html'">
+			<div id="contador"></div>
+			<p></p>
+			<p class="gray mini"></p>
+		</div>
+	</div>
+
+	<div class="bloco">
+	<span class="textcontent">
+		Now we can put something else in this page, dude!
+	</span>
+	</div>
+</body>
+</html>

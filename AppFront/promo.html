@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Vinicius Baroni Soares">
+	<meta name="theme-color" content="rgb(60,60,60)">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link rel="shortcut icon" type="image/png" href="assets/images/logo.png">
+	<script type="text/javascript" src="assets/js/jquery-3.1.0.js"></script>
+	<script type="text/javascript" src="assets/js/scripts.js"></script>
+
+	<title>GeoPromo</title>
+	<script type="text/javascript">
+		/**
+		* Obtém os parâmetros passados por GET
+		*/
+		var get =obtemGet();
+		var idPromo = get[0];
+		var distanciaCalculada = get[1];
+
+		window.onload = exibePromo(idPromo);
+	</script>
+</head>
+<body>
+	<div id="colorheader"></div>
+
+	<div id="header">
+		<div id="header-content">
+			<!--<span id="logo" onclick="location.href='index.html'"></span>-->
+			<!--<span  onclick="location.href='index.html'">
+				<span id="logoGeo" class="txtLogo">geo</span><span id="logoPromo" class="txtLogo">promo</span>
+			</span>-->
+			<span class="headertext">
+				<span class="icon back-icon" onclick="location.href='lista.html'"></span>
+				<span class="texto"></span>
+				<span class="icon home-icon" onclick="location.href='index.html'"></span>
+				<!--<span class="icon home-icon" onclick="location.href='index.html'">
+					<span class="home-inside"></span>
+					<span class="home-inside"></span>
+				</span>-->
+			</span>
+		</div>
+	</div>
+
+	<div class="container bloco">
+		<span class="loading-image"></span>
+		<button class="btn btn-rounded btn-update" onclick="getPromos(true)" style="display:none;"></button>
+	</div>
+</body>
+</html>

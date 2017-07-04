@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Vinicius Baroni Soares">
+	<meta name="theme-color" content="rgb(60,60,60)">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link rel="shortcut icon" type="image/png" href="assets/images/logo.png">
+	<script type="text/javascript" src="assets/js/jquery-3.1.0.js"></script>
+	<script type="text/javascript" src="assets/js/scripts.js"></script>
+
+	<title>GeoPromo</title>
+	<script type="text/javascript">
+		/**
+		* Obtém os parâmetros passados por GET
+		*/
+		var idPromo = obtemGet()[0];
+		window.onload = exibeObterPromo(idPromo);
+	</script>
+</head>
+<body>
+	<div id="colorheader"></div>
+
+	<div id="header">
+		<div id="header-content">
+			<span class="headertext">
+				<span class="texto umicone">
+					Obter promoção
+				</span>
+				<span class="icon home-icon" onclick="location.href='index.html'"></span>
+			</span>
+		</div>
+	</div>
+
+	<div class="container bloco">
+		<span class="textcontent">
+			Insira abaixo o código promocional da empresa <span class="mini gray">(<b id="nomeEmpresa"></b>)</span>.
+			<br><br>
+			<span class="mini gray">
+				Peça o código no estabelecimento.
+			</span>
+		</span>
+		<input type="text" class="input input-full textcenter" id="codigo" placeholder="Código">
+		<br>
+		<span class="btn btn-square" id="btnEnviar" onclick="validaCodigo()">Enviar código</span>
+		<span class="loading-image load-bottom"></span>
+	</div>
+	
+	<script>
+		$('#codigo').keypress(function(e){
+			if(e.keyCode == 13)
+				$('#btnEnviar').click();
+		});
+	</script>
+</body>
+</html>
