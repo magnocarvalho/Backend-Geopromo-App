@@ -4,7 +4,7 @@
 var raio = 1.45;
 var distObter = 50;
 
-urlRaiz = 'http://localhost/geopromoServer';
+urlRaiz = 'http://localhost/geopromo/ServerBack';
 
 /**
 * Captura os dados de latitude e longitude do usuário e realiza a requisição ao servidor para obter
