@@ -19,18 +19,14 @@ function getDados(funcaoSecundaria, funcao = 'get', noMessage = false){
 			var long = position.coords.longitude;
 			var url = urlRaiz + '/api/';
 			if(funcao == 'get')
-				// url += 'getclose?lat='+lat+'&long='+long+'&raio='+raio;
 				url += 'getclose/'+raio+'/'+lat+'/'+long;
 			else if(funcao == 'count')
-				// url += 'countclose?lat='+lat+'&long='+long+'&raio='+raio;
 				url += 'countclose/'+raio+'/'+lat+'/'+long;
 
 			$.ajax({
 				url: url,
 				dataType: 'json',
 				success: function(data){
-					//console.log(url);
-					//console.log(data);
 					if(data == ''){
 						if(noMessage == false){
 							//alert('Não há nenhuma promoção próxima a você.');
@@ -40,7 +36,7 @@ function getDados(funcaoSecundaria, funcao = 'get', noMessage = false){
 				},
 				error: function(data, noMessage){
 					if(noMessage == false){
-						alert('Faiô');
+						alert('Houve um problema');
 						console.log(data);
 					}
 				}
@@ -152,7 +148,6 @@ function buscaPromo(idPromo, funcaoSecundaria){
 		url: url,
 		dataType: 'json',
 		success: function(dado){
-			//console.log(dado);
 			$('.loading-image').remove();
 			funcaoSecundaria(dado);
 		},
