@@ -1,6 +1,6 @@
 <?php defined('INITIALIZED') OR exit('You cannot access this file directly');
 
-define('SYSROOT', '/geopromoServer'); // Default: '/'
+define('SYSROOT', '/geopromo/ServerBack'); // Default: '/'
 define('BASEPATH', realpath($_SERVER["DOCUMENT_ROOT"]).SYSROOT); // Complete path to application root
 define('ENVIRONMENT', 'dev'); // 'dev' or 'production'
 
