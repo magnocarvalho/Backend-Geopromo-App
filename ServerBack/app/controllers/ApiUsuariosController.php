@@ -14,10 +14,40 @@ class ApiUsuariosController extends Controller {
         $cliente = (new Cliente())->where('email = ?', [$_POST['email']])->find();
 
         // Retorna com base na existência ou não de registros no BD
-        if(sizeof($cliente) > 0)
+        if(sizeof($cliente) == 1) {
             echo jsonSerialize(true);
-        else
+            session('usuarioLogin', serialize($cliente[0]->getID()));
+        } else
             echo jsonSerialize(false);
+    }
+
+    // Checa a senha inserida
+    public function checkSenha () {
+        // Verifica se o tempo desde a última tentativa válida é maior ou menor a [2 horas]
+        if(Auth::countTries() && (time() - session('loginTime')) < 60 * 2){
+            echo jsonSerialize('-1');
+        } else {
+            $idCliente = unserialize(session('usuarioLogin'));
+
+            // Obtém os dados do cliente no banco, contendo o ID gerado
+            $cliente = (new Cliente())->get($idCliente);
+
+            // Compara a senha digitada com a gravada no banco
+            if (Auth::bindAuth(['email' => $cliente->getEmail(), 'senha' => $_POST['senha']], 'cliente')) {
+                // Cria a sessão do usuário
+                Auth::createAuthSession($cliente);
+                echo jsonSerialize(true);
+            } else {
+                if (Auth::countTries()) {
+                    // Se o máximo de tentativas (padrão: 5) for alcançado, cria uma var de sessão com o time atual
+                    session('loginTime', time());
+
+                    echo jsonSerialize('-1');
+                } else {
+                    echo jsonSerialize(false);
+                }
+            }
+        }
     }
 
 
@@ -61,6 +91,9 @@ class ApiUsuariosController extends Controller {
         $cliente->setNascimento($dataNasc);
 
         $cliente->save(); // Salva no banco
+
+        // Define a variável de sessão usada para o registro como nula
+        session('usuarioRegistro', null);
 
         // Cria a sessão do usuário
         Auth::createAuthSession($cliente);

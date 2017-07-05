@@ -75,8 +75,7 @@ function loginEmail(email) {
 // Mostra o conteúdo na página com base na existência ou não do login no BD
 function showLogin2Content (emailExistente) {
     if(emailExistente){
-        // TODO: caso o email esteja no BD
-        alert(emailExistente);
+        showLogin3Content();
 
     } else {
         $('.btn').remove();
@@ -95,6 +94,60 @@ function showLogin2Content (emailExistente) {
         $('.textcontent').append(conteudo);
     }
 }
+
+// Mostra o conteúdo da página para inserir a senha e realizar o login
+function showLogin3Content () {
+    $('.loading-image').remove();
+
+    $('.textcontent').empty();
+
+
+    var conteudo = '<h2 class="colororange">Conecte-se para encontrar promoções próximas</h2>';
+    conteudo += '<p>Informe sua senha para entrar na sua conta.</p><br>';
+    conteudo += '<input type="password" class="input input-full textcenter" id="senhalogin" ' +
+        'placeholder="Informe sua senha"><br>';
+    conteudo += '<span class="btn btn-square" id="btnContinuar" onclick="realizarLogin($(\'#senhalogin\').val())">' +
+        'Continuar</span>';
+
+    $('.textcontent').append(conteudo);
+}
+
+// Confere se a senha digitada corresponde à gravada no banco de dados e realiza o login
+function realizarLogin (senha) {
+    $('body').append('<span class="loading-image load-bottom"></span>');
+    if(senha == '') {
+        $('.load-bottom').remove();
+        $('.alert-erro').remove();
+        $('<span class="alert alert-erro">Informe sua senha para entrar</span>').insertAfter('#senhalogin');
+    } else {
+        $.ajax({
+            url: urlRaiz+'/api/user/checksenha',
+            dataType: 'json',
+            method: 'post',
+            data: {'senha': senha},
+            success: function (data) {
+                $('.load-bottom').remove();
+                console.log(data);
+                if(data == -1){
+                    $('.alert-erro').remove();
+                    $('<span class="alert alert-erro">Muitas tentativas incorretas de acesso. Tente novamente após 2 ' +
+                        'horas.</span>').insertAfter('#senhalogin');
+
+                } else if(data == false){
+                    $('.alert-erro').remove();
+                    $('<span class="alert alert-erro">Senha incorreta</span>').insertAfter('#senhalogin');
+                } else {
+                    location.href='home.html';
+                }
+            },
+            error: function (data) {
+                $('.load-bottom').remove();
+                alert("Houve um erro");
+            }
+        });
+    }
+}
+
 
 
 
@@ -213,7 +266,6 @@ function cadastroInfo(nome, nasc) {
             success: function (data) {
                 $('.load-bottom').remove();
                 location.href='home.html';
-                //showRegister2Content();
             },
             error: function (data) {
                 $('.load-bottom').remove();
