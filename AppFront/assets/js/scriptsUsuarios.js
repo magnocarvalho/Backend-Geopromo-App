@@ -28,7 +28,8 @@ function showLogin1Content (isLogged) {
     $('.container').append('<span class="textcontent"></span>');
 
     if(isLogged) {
-        // TODO: caso já esteja logado - redirecionar para a home
+        // Redireciona para a página home.html caso já esteja logado
+        location.href='home.html';
 
     } else {
         var conteudo = '<h2 class="colororange">Conecte-se para encontrar promoções próximas</h2>';
@@ -46,10 +47,14 @@ function showLogin1Content (isLogged) {
 // Envia o email ao servidor para verificar se já está registrado
 function loginEmail(email) {
     $('body').append('<span class="loading-image load-bottom"></span>');
-    if(email == '') {
+
+    var regexEmail = new RegExp('^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4}$');
+
+    if(email == '' || !regexEmail.test(email)) {
         $('.load-bottom').remove();
         $('.alert-erro').remove();
-        $('<span class="alert alert-erro">Insira seu email</span>').insertAfter('#emailLogin');
+        $('<span class="alert alert-erro">Insira seu email (deve ser um endereço válido)</span>')
+            .insertAfter('#emailLogin');
     } else {
         $.ajax({
             url: urlRaiz+'/api/user/checkemail/'+email,
@@ -74,6 +79,7 @@ function showLogin2Content (emailExistente) {
 
     } else {
         $('.btn').remove();
+        $('.alert').remove();
         $('h2').html('Este email não está cadastrado');
         $('p').html('Você pode mudá-lo e tentar se conectar novamente ou pode se cadastrar usando este email.');
 
@@ -116,7 +122,7 @@ function cadastroEmail(email) {
 }
 
 // Exibe os dados da página de registro (etapa 1) - TODO: semelhante ao login
-function showRegister1Content (isLogged) {
+function showRegister1Content () {
     $('.loading-image').remove();
 
     $('.textcontent').empty();
@@ -133,7 +139,7 @@ function showRegister1Content (isLogged) {
 }
 
 
-// Envia o email ao servidor para armazenar a senha no objeto
+// Envia a senha ao servidor para armazenar no objeto
 function cadastroSenha(senha) {
     $('body').append('<span class="loading-image load-bottom"></span>');
     if(senha == '') {
@@ -146,8 +152,61 @@ function cadastroSenha(senha) {
             dataType: 'json',
             success: function (data) {
                 $('.load-bottom').remove();
-                alert(senha);
-                //showRegister1Content(data);
+                showRegister2Content();
+            },
+            error: function (data) {
+                $('.load-bottom').remove();
+                alert("Houve um erro");
+            }
+        });
+    }
+}
+
+// Exibe os dados da página de registro (etapa 2)
+function showRegister2Content () {
+    $('.loading-image').remove();
+
+    $('.textcontent').empty();
+
+
+    var conteudo = '<h2 class="colororange">Crie sua conta, é rapidinho</h2>';
+    conteudo += '<p>Para finalizar, diga-nos um pouco mais de você.</p><br>';
+    conteudo += '<input type="text" class="input input-full textcenter" id="nomeusuario" ' +
+        'placeholder="Seu nome"><br>';
+    conteudo += '<input type="text" class="input input-full textcenter" id="datanascimento" ' +
+        'placeholder="Sua data de nascimento (dd/mm/aaaa)" pattern="[0-9]{2,2}\/[0-9]{2,2}\/[0-9]{4,4}"><br>';
+    conteudo += '<span class="btn btn-square" id="btnContinuar" onclick="cadastroInfo($(\'#nomeusuario\').val(), ' +
+        '$(\'#datanascimento\').val())">' +
+        'Concluir</span>';
+
+    $('.textcontent').append(conteudo);
+}
+
+// Envia os demais dados ao servidor para armazenar no objeto
+function cadastroInfo(nome, nasc) {
+    $('body').append('<span class="loading-image load-bottom"></span>');
+
+    $('.alert-erro').remove();
+    var regexNasc = new RegExp('^[0-9]{2,2}\/[0-9]{2,2}\/[0-9]{4,4}$');
+
+    if(nome == '' || nasc == '' || !regexNasc.test(nasc)) {
+        if (nome == '') {
+            $('.load-bottom').remove();
+            $('<span class="alert alert-erro">Informe seu nome</span>').insertAfter('#nomeusuario');
+        }
+        if (nasc == '' || !regexNasc.test(nasc)) {
+            $('.load-bottom').remove();
+            $('<span class="alert alert-erro">Informa sua data de nascimento (no padrão dd/mm/aaa)</span>')
+                .insertAfter('#datanascimento');
+        }
+    }else {
+        $.ajax({
+            url: urlRaiz+'/api/user/register/dados/'+nome+'/'+nasc.replace(/\//g, '-'),
+            dataType: 'json',
+            success: function (data) {
+                $('.load-bottom').remove();
+                location.href='home.html';
+                //showRegister2Content();
             },
             error: function (data) {
                 $('.load-bottom').remove();

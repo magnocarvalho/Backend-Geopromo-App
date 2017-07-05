@@ -19,3 +19,4 @@ $route['api/getauth'] = 'ApiUsuariosController/getAuth';
 $route['api/user/checkemail/?'] = 'ApiUsuariosController/checkEmail';
 $route['api/user/register/email/?'] = 'ApiUsuariosController/registroEmail';
 $route['api/user/register/senha/?'] = 'ApiUsuariosController/registroSenha';
+$route['api/user/register/dados/?'] = 'ApiUsuariosController/registroDados';

@@ -35,7 +35,36 @@ class ApiUsuariosController extends Controller {
         $cliente = unserialize(session('usuarioRegistro'));
         $cliente->setSenha(Auth::hashPassword($params['id']));
 
-        session('usuarioRegistro', serialize($cliente));
+        $cliente->save(); // Salva no banco
+
+        // Obtém os dados do cliente no banco, contendo o ID gerado
+        $cliente = $cliente->where('email = ?', [$cliente->getEmail()])->find()[0];
+
+        session('usuarioRegistro', serialize($cliente->getID()));
+        echo jsonSerialize(true);
+    }
+
+    // Armazena os demais dados do usuário
+    public function registroDados ($params) {
+        // Obtém a data de nascimento informada e a formata para o padrão do BD
+        $arrData = explode('-', $params[0]);
+        $arrData = [$arrData[2], $arrData[1], $arrData[0]];
+        $dataNasc = implode('-', $arrData);
+
+
+        $idCliente = unserialize(session('usuarioRegistro'));
+
+        // Obtém os dados do cliente no banco, contendo o ID gerado
+        $cliente = (new Cliente())->get($idCliente);
+
+        $cliente->setNome($params['id']);
+        $cliente->setNascimento($dataNasc);
+
+        $cliente->save(); // Salva no banco
+
+        // Cria a sessão do usuário
+        Auth::createAuthSession($cliente);
+
         echo jsonSerialize(true);
     }
 }
