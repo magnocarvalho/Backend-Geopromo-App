@@ -246,9 +246,10 @@ function validaCodigo(){
 	var idPromo = $('#idPromo').val();
 	var codigoDigitado = $('#codigo').val();
 
-	if(codigoDigitado == '')
-		$('<span class="alert alert-erro">Insira o código da empresa.</span>').insertAfter('#codigo');
-	else{
+	if(codigoDigitado == '') {
+		$('.alert-erro').remove();
+        $('<span class="alert alert-erro">Insira o código da empresa.</span>').insertAfter('#codigo');
+    } else{
 		$.ajax({
 			url: urlRaiz + '/api/validacodigo/' + idPromo + '/' + codigoDigitado,
 			dataType: 'json',

@@ -226,6 +226,7 @@ sup, sub{
 	display: inline-block;
 	margin: 20px auto;
 	padding: 0 15px;
+    width: 90%;
 }
 
 /**
@@ -444,6 +445,7 @@ sup, sub{
 	border: none;
 	cursor: pointer;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+	vertical-align: middle;
 }
 	.btn:active{
 		background-color: rgb(210, 130, 0)
@@ -451,6 +453,12 @@ sup, sub{
 
 	.btn-disabled{
 		background-color: rgb(200,200,200);
+	}
+	.btn-secundary{
+        background: rgb(60,60,60);
+	}
+    .btn-secundary:active{
+        background: rgb(30,30,30);
 	}
 	/**
 	* Botão redondo

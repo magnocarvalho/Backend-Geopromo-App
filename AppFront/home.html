@@ -8,37 +8,45 @@
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 	<link rel="shortcut icon" type="image/png" href="assets/images/logo.png">
 	<script type="text/javascript" src="assets/js/jquery-3.1.0.js"></script>
-	<script type="text/javascript" src="assets/js/scriptsUsuarios.js"></script>
+	<script type="text/javascript" src="assets/js/scriptsPromocoes.js"></script>
 
-    <title>GeoPromo</title>
-    <script type="text/javascript">
-        window.onload = getAuth();
+	<title>GeoPromo</title>
+	<script type="text/javascript">
+		window.onload = contaPromos(false);
 
-        /*
-         * Chama a função a cada 30 segundos.
-         */
-        setInterval(getAuth, 300000);
-    </script>
+		/*
+		* Chama a função a cada 30 segundos.
+		*/
+		setInterval(contaPromos, 300000);
+	</script>
 </head>
 <body>
 	<div id="colorheader"></div>
 	<div id="header">
 		<div id="header-content">
+			<!--<span id="logo" onclick="location.href='index.html'"></span>-->
+			<!--<span  onclick="location.href='index.html'">-->
 			<span id="logoExtenso">
 				<span id="logoGeo" class="txtLogo">geo</span><span id="logoPromo" class="txtLogo">promo</span>
 			</span>
+			<!--</span>-->
 		</div>
 	</div>
 
 	<div class="container bloco">
 		<span class="loading-image"></span>
+
+		<div id="cont" style="display: none;" onclick="location.href='lista.html'">
+			<div id="contador"></div>
+			<p></p>
+			<p class="gray mini"></p>
+		</div>
 	</div>
 
-    <script>
-        $(document).keypress(function(e){
-            if(e.keyCode == 13)
-                $('#btnContinuar').click();
-        });
-    </script>
+	<div class="bloco">
+		<span class="textcontent">
+			Now we can put something else in this page, dude!
+		</span>
+	</div>
 </body>
 </html>

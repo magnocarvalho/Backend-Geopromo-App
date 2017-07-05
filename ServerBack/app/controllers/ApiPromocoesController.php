@@ -1,6 +1,6 @@
 <?php defined('INITIALIZED') OR exit('You cannot access this file directly');
 
-class ApiController extends Controller {
+class ApiPromocoesController extends Controller {
 
     // Funçao que conta o número de promoções próximas
 	public function countClose ($params) {
