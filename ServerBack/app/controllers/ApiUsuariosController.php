@@ -67,4 +67,10 @@ class ApiUsuariosController extends Controller {
 
         echo jsonSerialize(true);
     }
+
+    // Função que realiza o logout do usuário
+    public function logout () {
+        Auth::doLogout();
+        echo jsonSerialize(true);
+    }
 }
