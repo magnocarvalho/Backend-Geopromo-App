@@ -9,9 +9,9 @@ class ApiUsuariosController extends Controller {
 
 
     // Verifica se o email digitado/recebido já está cadastrado no banco de dados
-    public function checkEmail ($params) {
+    public function checkEmail () {
         // Busca o cliente pelo email recebido
-        $cliente = (new Cliente())->where('email = ?', [$params['id']])->find();
+        $cliente = (new Cliente())->where('email = ?', [$_POST['email']])->find();
 
         // Retorna com base na existência ou não de registros no BD
         if(sizeof($cliente) > 0)
@@ -22,18 +22,18 @@ class ApiUsuariosController extends Controller {
 
 
     // Armazena o email para ser registrado
-    public function registroEmail ($params) {
+    public function registroEmail () {
         $cliente = new Cliente();
-        $cliente->setEmail($params['id']);
+        $cliente->setEmail($_POST['email']);
 
         session('usuarioRegistro', serialize($cliente));
         echo jsonSerialize(true);
     }
 
     // Armazena a senha para ser registrada
-    public function registroSenha ($params) {
+    public function registroSenha () {
         $cliente = unserialize(session('usuarioRegistro'));
-        $cliente->setSenha(Auth::hashPassword($params['id']));
+        $cliente->setSenha(Auth::hashPassword($_POST['senha']));
 
         $cliente->save(); // Salva no banco
 
@@ -45,9 +45,9 @@ class ApiUsuariosController extends Controller {
     }
 
     // Armazena os demais dados do usuário
-    public function registroDados ($params) {
+    public function registroDados () {
         // Obtém a data de nascimento informada e a formata para o padrão do BD
-        $arrData = explode('-', $params[0]);
+        $arrData = explode('-', $_POST['nascimento']);
         $arrData = [$arrData[2], $arrData[1], $arrData[0]];
         $dataNasc = implode('-', $arrData);
 
@@ -57,7 +57,7 @@ class ApiUsuariosController extends Controller {
         // Obtém os dados do cliente no banco, contendo o ID gerado
         $cliente = (new Cliente())->get($idCliente);
 
-        $cliente->setNome($params['id']);
+        $cliente->setNome($_POST['nome']);
         $cliente->setNascimento($dataNasc);
 
         $cliente->save(); // Salva no banco

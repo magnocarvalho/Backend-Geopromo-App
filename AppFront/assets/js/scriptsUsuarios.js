@@ -10,7 +10,6 @@ function getAuth() {
         url: urlRaiz+'/api/getauth',
         dataType: 'json',
         success: function (data) {
-            console.log(data);
             showLogin1Content(data);
         },
         error: function (data) {
@@ -57,8 +56,10 @@ function loginEmail(email) {
             .insertAfter('#emailLogin');
     } else {
         $.ajax({
-            url: urlRaiz+'/api/user/checkemail/'+email,
+            url: urlRaiz+'/api/user/checkemail',
             dataType: 'json',
+            method: 'post',
+            data: {'email': email},
             success: function (data) {
                 $('.load-bottom').remove();
                 showLogin2Content(data);
@@ -107,8 +108,10 @@ function cadastroEmail(email) {
         $('<span class="alert alert-erro">Insira seu email</span>').insertAfter('#emailLogin');
     } else {
         $.ajax({
-            url: urlRaiz+'/api/user/register/email/'+email,
+            url: urlRaiz+'/api/user/register/email',
             dataType: 'json',
+            method: 'post',
+            data: {'email': email},
             success: function (data) {
                 $('.load-bottom').remove();
                 showRegister1Content();
@@ -148,8 +151,10 @@ function cadastroSenha(senha) {
         $('<span class="alert alert-erro">Defina uma senha para a conta</span>').insertAfter('#senharegistro');
     } else {
         $.ajax({
-            url: urlRaiz+'/api/user/register/senha/'+senha,
+            url: urlRaiz+'/api/user/register/senha',
             dataType: 'json',
+            method: 'post',
+            data: {'senha': senha},
             success: function (data) {
                 $('.load-bottom').remove();
                 showRegister2Content();
@@ -201,8 +206,10 @@ function cadastroInfo(nome, nasc) {
         }
     }else {
         $.ajax({
-            url: urlRaiz+'/api/user/register/dados/'+nome+'/'+nasc.replace(/\//g, '-'),
+            url: urlRaiz+'/api/user/register/dados',
             dataType: 'json',
+            method: 'post',
+            data: {'nome': nome, 'nascimento': nasc.replace(/\//g, '-')},
             success: function (data) {
                 $('.load-bottom').remove();
                 location.href='home.html';

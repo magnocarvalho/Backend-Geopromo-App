@@ -6,6 +6,33 @@ var distObter = 50;
 
 urlRaiz = 'http://localhost/geopromo/ServerBack';
 
+
+// Verifica se o usuário atual está autenticado no sistema
+function getAuth(secundaryFunction) {
+    $.ajax({
+        url: urlRaiz+'/api/getauth',
+        dataType: 'json',
+        success: function (data) {
+            processLoginInfo(data, secundaryFunction);
+        },
+        error: function (data) {
+            alert("Houve um problema");
+        }
+    });
+}
+
+// Executa a dada função caso esteja logado ou redireciona para a index (login)
+function processLoginInfo (isLogged, secundaryFunction) {
+    if(isLogged){
+        secundaryFunction();
+    } else {
+        location.href='index.html';
+    }
+}
+
+
+
+
 /**
 * Captura os dados de latitude e longitude do usuário e realiza a requisição ao servidor para obter
 * os dados de acordo com a função base. 
