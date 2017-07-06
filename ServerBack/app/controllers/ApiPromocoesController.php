@@ -23,7 +23,7 @@ class ApiPromocoesController extends Controller {
     // Função que busca os dados referentes a uma dada promoção e a empresa (vendedor) relacionada
     public function findPromo ($params) {
 	    // Obtém a promoção pelo ID passado por parâmetro
-	    $dado['anuncio'] = (new Promocao())->get($params['id']);
+	    $dado['anuncio'] = (new Promocao())->where('ativo = true AND id = ?', [$params['id']])->find()[0];
 	    // Obtém os dados do vendedor (empresa) referentes à promoção
 	    $dado['empresa'] = (new Vendedor())->get($dado['anuncio']->getIdVendedor());
 
