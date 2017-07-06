@@ -122,12 +122,12 @@ function contaPromos(mostraLoad){
 		/*
 		* Teste de rolagem da página com mais blocos na inicial. Fazer dela um hub de funções.
 		*/
-		/*
-		$('body').append('<div style="clear:both"><div class="bloco teste"></div>');
-		$('body').append('<div style="clear:both"><div class="bloco teste"></div>');
-		$('body').append('<div style="clear:both"><div class="bloco teste"></div>');
-		$('.teste').append('<br><br><br><br><br>');
-		*/
+
+		// $('body').append('<div style="clear:both"><div class="bloco teste"></div>');
+		// $('body').append('<div style="clear:both"><div class="bloco teste"></div>');
+		// $('body').append('<div style="clear:both"><div class="bloco teste"></div>');
+		// $('.teste').append('<br><br><br><br><br>');
+
 	}, 'count');
 }
 
@@ -359,4 +359,19 @@ function moneyFormat( numero ){
 */
 function obtemGet(){
 	return window.location.search.substring(1).split('&');
+}
+
+
+function logout () {
+    $.ajax({
+        url: urlRaiz + '/api/user/logout',
+        dataType: 'json',
+        success: function(dados){
+            location.href='index.html';
+        },
+        error: function(dados){
+            console.log(dados);
+            alert('Não foi possível desconectar.');
+        }
+    });
 }
