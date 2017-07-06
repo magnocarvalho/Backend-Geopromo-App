@@ -16,8 +16,9 @@
 		* Obtém os parâmetros passados por GET
 		*/
 		var idPromo = obtemGet()[0];
+		var idCheckin = obtemGet()[1];
 		window.onload = getAuth(function () {
-		    exibePromoObtida(idPromo);
+		    exibePromoObtida(idPromo, idCheckin);
         });
 	</script>
 </head>
@@ -52,7 +53,12 @@
 				<b>Título: </b><span id="tituloPromo"></span>
 				<br>
 				<b>Empresa: </b><span id="nomeEmpresa"></span>
+				<br><br>
+				<b>Resgatada em: </b><br><span id="dataResgate"></span>
 			</span>
+            <!--<span class="alert alert-info">-->
+                <!--Válido pelas próximas 24 horas.-->
+            <!--</span>-->
 		</span>
 		<span class="loading-image load-bottom"></span>
 	</div>

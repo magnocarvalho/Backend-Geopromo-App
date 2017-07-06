@@ -4,7 +4,11 @@ class GeoLocal extends Model {
 
 
     public function pegaProximos($lat, $long, $raio) {
-        $empresas = DB::all('vendedor');
+        // Pega empresas cuja latitude e longitude variem para +- 3 pontos
+        $empresas = (new Vendedor())->where(
+            'latitude BETWEEN ? AND ? AND longitude BETWEEN ? AND ?',
+            [$lat-3, $lat+3, $long-3, $long+3]
+        )->find();
 
         $dados = array();
         $i = 0;
@@ -82,7 +86,7 @@ class GeoLocal extends Model {
         for($i = 0; $i < count($vetor); $i++){
             $disMin = $raio*1000;
             foreach($vetor as $key => $result){
-                if($result['dist'] <= $disMin && !in_array($result['id'], $idsOrdenados)){
+                if($result['dist'] < $disMin && !in_array($result['id'], $idsOrdenados)){
                     $disMin = $result['dist'];
                     $indiceMin = $key;
                 }

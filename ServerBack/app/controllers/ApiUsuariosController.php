@@ -24,7 +24,7 @@ class ApiUsuariosController extends Controller {
     // Checa a senha inserida
     public function checkSenha () {
         // Verifica se o tempo desde a última tentativa válida é maior ou menor a [2 horas]
-        if(Auth::countTries() && (time() - session('loginTime')) < 60 * 2){
+        if(Auth::countTries() && (time() - session('loginTime')) < 60 * 60 * 2){
             echo jsonSerialize('-1');
         } else {
             $idCliente = unserialize(session('usuarioLogin'));
@@ -66,9 +66,6 @@ class ApiUsuariosController extends Controller {
         $cliente->setSenha(Auth::hashPassword($_POST['senha']));
 
         $cliente->save(); // Salva no banco
-
-        // Obtém os dados do cliente no banco, contendo o ID gerado
-        $cliente = $cliente->where('email = ?', [$cliente->getEmail()])->find()[0];
 
         session('usuarioRegistro', serialize($cliente->getID()));
         echo jsonSerialize(true);

@@ -293,10 +293,10 @@ function validaCodigo(){
             method: 'post',
             data: {'idPromo':idPromo, 'codigo':codigoDigitado},
 			success: function(dados){
-				if(dados == '')
+				if(dados == false)
 					$('<span class="alert alert-erro">O código digitado é inválido.</span>').insertAfter('#codigo');
 				else
-					location.href='promocaoresgatada.html?' + idPromo;
+					location.href='promocaoresgatada.html?' + idPromo + '&' + dados;
 			},
 			error: function(dados){
 				console.log(dados);
@@ -309,9 +309,29 @@ function validaCodigo(){
 /**
 * Função que chama a de obter os dados do anúncio e exibe-os na página de promoção obtida.
 */
-function exibePromoObtida($idPromo){
+function exibePromoObtida(idPromo, idCheckin){
 	buscaPromo(idPromo, function(dado){
-		console.log(dado);
+        var url = urlRaiz + '/api/findcheckin/' + idCheckin;
+
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            success: function(dado){
+                var datahora = dado.Checkin.datahora;
+
+                var ano = datahora.substr(0, 4);
+                var mes = datahora.substr(5, 2);
+                var dia = datahora.substr(8, 2);
+
+                var hora = datahora.substr(11, 2);
+                var minuto = datahora.substr(14, 2);
+                var segundo = datahora.substr(17, 2);
+		        $('#dataResgate').append(dia + '/' + mes + '/' + ano + ', às ' + hora + ':' + minuto);
+            },
+            error: function(dado){
+                console.log(dado);
+            }
+        });
 		$('#nomeEmpresa').append(dado.empresa.estabelecimento);
 		$('#tituloPromo').append(dado.anuncio.titulo);
 	});

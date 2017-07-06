@@ -32,16 +32,31 @@ class ApiPromocoesController extends Controller {
     }
 
     // Função que valida o código digitado pelo usuário, pra ver se confere com o dado do estabelecimento/promoção
-    public function validaCodigo ($params) {
+    public function validaCodigo () {
         // Obtém a promoção pelo ID passado por parâmetro
         $promocao = (new Promocao())->get($_POST['idPromo']);
+
+        $cliente = Auth::getLoggedUser();
+        // Registra o checkin do cliente com esta promocao
+        $checkin = new Checkin();
+        $checkin->setIdCliente($cliente->getId());
+        $checkin->setIdPromocao($promocao->getId());
+        $checkin->setDatahora(date('Y-m-d H:i:s'));
+        $checkin->save();
 
         // Compara o código da promoção, em maiúsculas, com o código digitado ($params[0]), também em maiúsculas
         if(strtoupper($promocao->getCodigo()) == strtoupper($_POST['codigo'])){
             // Retorna true caso sejam iguais
-            echo jsonSerialize(true);
+            echo jsonSerialize($checkin->getId());
         } else
             // Retorna false caso não sejam iguais
             echo jsonSerialize(false);
 	}
+
+
+	public function findCheckin ($params) {
+	    $checkin = (new Checkin())->get($params['id']);
+
+	    echo jsonSerialize($checkin);
+    }
 }
