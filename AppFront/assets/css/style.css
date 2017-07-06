@@ -235,8 +235,8 @@ sup, sub{
 .lista{
 	display: inline-block;
 	border-bottom: 1px solid rgb(230,230,230);
+    padding-bottom: 10px;
 	width: 100%;
-	max-width: 350px;
 	vertical-align: top;
 	color: rgb(30,30,30);
 	transition: 0.3s;

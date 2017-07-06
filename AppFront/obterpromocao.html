@@ -16,7 +16,9 @@
 		* Obtém os parâmetros passados por GET
 		*/
 		var idPromo = obtemGet()[0];
-		window.onload = getAuth(exibeObterPromo(idPromo));
+		window.onload = getAuth(function () {
+            exibeObterPromo(idPromo);
+        });
 	</script>
 </head>
 <body>

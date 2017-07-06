@@ -38,7 +38,10 @@ function processLoginInfo (isLogged, secundaryFunction) {
 * os dados de acordo com a função base. 
 * Pode retornar o número de anúncios próximos ou os dados referentes a eles.
 */
-function getDados(funcaoSecundaria, funcao = 'get', noMessage = false){
+function getDados(funcaoSecundaria, funcao, noMessage){
+    (funcao !== null)? funcao:'get';
+    (noMessage !== null)? noMessage:false;
+
 	if(navigator.geolocation){
 		navigator.geolocation.getCurrentPosition(function(position){
 			// Função em caso de sucesso ao obter a posição do usuário
@@ -46,13 +49,15 @@ function getDados(funcaoSecundaria, funcao = 'get', noMessage = false){
 			var long = position.coords.longitude;
 			var url = urlRaiz + '/api/';
 			if(funcao == 'get')
-				url += 'getclose/'+raio+'/'+lat+'/'+long;
+				url += 'getclose';
 			else if(funcao == 'count')
-				url += 'countclose/'+raio+'/'+lat+'/'+long;
+				url += 'countclose';
 
 			$.ajax({
 				url: url,
 				dataType: 'json',
+                method: 'post',
+                data: {'raio': raio, 'latitude': lat, 'longitude':long},
 				success: function(data){
 					if(data == ''){
 						if(noMessage == false){
@@ -85,7 +90,9 @@ function getDados(funcaoSecundaria, funcao = 'get', noMessage = false){
 /**
 * Função que obtém a contagem do número de anúncios próximos ao visitante
 */
-function contaPromos(mostraLoad = true){
+function contaPromos(mostraLoad){
+    (mostraLoad !== null)? mostraLoad:true;
+
 	if(mostraLoad){
 		if($('.loading-image').length == 0){
 			$('body').append('<span class="loading-image load-bottom"></span>');
@@ -127,7 +134,9 @@ function contaPromos(mostraLoad = true){
 /**
 * Função que obtém os dados básicos de todas os anúncios próximos ao visitante
 */
-function getPromos(mostraLoad = true){
+function getPromos(mostraLoad){
+    (mostraLoad !== null)? mostraLoad:true;
+
 	if(mostraLoad){
 		if($('.loading-image').length == 0){
 			$('body').append('<span class="loading-image load-bottom"></span>');
@@ -146,10 +155,9 @@ function getPromos(mostraLoad = true){
 
 		if(dados == ''){
 			$('.container').append(
-				'<span id="no-result" class="textcontent"><b>Não há nenhuma promoção próxima a você.</b></span>'
+				'<span id="no-result" class="textcontent">Não há nenhuma promoção próxima a você.</span>'
 			);
-		} else{
-			$(dados).each(function(dado){
+		} else{$(dados['promo']).each(function(dado){
 				$('.container').append('<div class="lista clickable" onclick="location.href=\'promo.html?' +
 					dados['promo'][dado]['id'] + '&'+ dados['promo'][dado]['dist'] + '\'"><h2 class="tituloPromo">' +
 					dados['promo'][dado]['titulo'] + ' </h2><p class="gray nomeEmpresa">' +
@@ -188,7 +196,9 @@ function buscaPromo(idPromo, funcaoSecundaria){
 /**
 * Função que chama a função de obtenção de dados para exibi-los na página.
 */
-function exibePromo(idPromo, mostraLoad = true){
+function exibePromo(idPromo, mostraLoad){
+    (mostraLoad !== null)? mostraLoad:true;
+
 	if(mostraLoad){
 		if($('.loading-image').length == 0){
 			$('body').append('<span class="loading-image load-bottom"></span>');
@@ -231,10 +241,10 @@ function exibePromo(idPromo, mostraLoad = true){
 		var conteudo = '<h2 class="tituloPromo">' + dado.anuncio.titulo + ' </h2>';
 		conteudo += '<span class="descanuncio">'+ descricao +'</span><br>';
 		conteudo += porcdesconto;
-		if(dado.anuncio.valorde != null && dado.anuncio.valorpor != null){
+		if(dado.anuncio.valorDe != null && dado.anuncio.valorPor != null){
 			conteudo += '<span class="valores"><div class="meio">De R$<span class="valor valorDe">' +
-                moneyFormat(dado.anuncio.valorde) + '</span></div>';
-			conteudo += '<div class="meio">Por R$<span class="valor valorPor">' + moneyFormat(dado.anuncio.valorpor) +
+                moneyFormat(dado.anuncio.valorDe) + '</span></div>';
+			conteudo += '<div class="meio">Por R$<span class="valor valorPor">' + moneyFormat(dado.anuncio.valorPor) +
                 '</span></div></span>';
 		}
 		conteudo += '<span class="dist-block full divisor"><b class="mini">Distância (última atualização): </b>' +
@@ -278,8 +288,10 @@ function validaCodigo(){
         $('<span class="alert alert-erro">Insira o código da empresa.</span>').insertAfter('#codigo');
     } else{
 		$.ajax({
-			url: urlRaiz + '/api/validacodigo/' + idPromo + '/' + codigoDigitado,
+			url: urlRaiz + '/api/validacodigo',
 			dataType: 'json',
+            method: 'post',
+            data: {'idPromo':idPromo, 'codigo':codigoDigitado},
 			success: function(dados){
 				if(dados == '')
 					$('<span class="alert alert-erro">O código digitado é inválido.</span>').insertAfter('#codigo');

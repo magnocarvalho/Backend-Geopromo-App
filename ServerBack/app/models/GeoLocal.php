@@ -11,12 +11,11 @@ class GeoLocal extends Model {
         foreach ($empresas as $empresa) {
             $dist = $this->calcDistancia($lat, $long, $empresa->getLatitude(), $empresa->getLongitude());
 
-            if($dist <= $raio){
+            if($dist <= (float) $raio){
                 $promocoes = (new Promocao())->where(
                     'id_vendedor = ? AND inicio <= ? AND fim >= ?',
                     [$empresa->getId(), date('Y-m-d'), date('Y-m-d')]
                 )->find();
-
 
                 foreach($promocoes as $promocao){
                     $dados['promo'][$i]['id'] = $promocao->getId();
@@ -78,11 +77,12 @@ class GeoLocal extends Model {
         $indiceMin = 0;
         $ordenado = array();
         $distsOrdenadas = array();
+        $idsOrdenados = array();
 
         for($i = 0; $i < count($vetor); $i++){
             $disMin = $raio*1000;
             foreach($vetor as $key => $result){
-                if($result['dist'] < $disMin && !in_array($result['dist'], $distsOrdenadas)){
+                if($result['dist'] <= $disMin && !in_array($result['id'], $idsOrdenados)){
                     $disMin = $result['dist'];
                     $indiceMin = $key;
                 }
@@ -90,6 +90,7 @@ class GeoLocal extends Model {
 
             $ordenado[] = $vetor[$indiceMin];
             $distsOrdenadas[] = $vetor[$indiceMin]['dist'];
+            $idsOrdenados[] = $vetor[$indiceMin]['id'];
         }
 
         return $ordenado;

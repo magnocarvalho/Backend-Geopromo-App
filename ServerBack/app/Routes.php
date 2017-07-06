@@ -10,10 +10,10 @@
  * depois de rotas sem parâmetros para funcionar corretamente.
  */
 
-$route['api/countclose/?'] = 'ApiPromocoesController/countClose';
-$route['api/getclose/?'] = 'ApiPromocoesController/getClose';
+$route['api/countclose'] = 'ApiPromocoesController/countClose';
+$route['api/getclose'] = 'ApiPromocoesController/getClose';
 $route['api/findpromo/?'] = 'ApiPromocoesController/findPromo';
-$route['api/validacodigo/?'] = 'ApiPromocoesController/validaCodigo';
+$route['api/validacodigo'] = 'ApiPromocoesController/validaCodigo';
 
 $route['api/getauth'] = 'ApiUsuariosController/getAuth';
 $route['api/user/checkemail'] = 'ApiUsuariosController/checkEmail';

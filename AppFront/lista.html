@@ -12,7 +12,9 @@
 
 	<title>GeoPromo</title>
 	<script type="text/javascript">
-        window.onload = getAuth(getPromos());
+        window.onload = getAuth(function () {
+            getPromos();
+        });
 	</script>
 </head>
 <body>
