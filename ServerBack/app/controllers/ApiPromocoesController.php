@@ -31,6 +31,14 @@ class ApiPromocoesController extends Controller {
 	    echo jsonSerialize($dado);
     }
 
+    // Busca as infor,ações referentes a um dado checkin
+    public function findCheckin ($params) {
+        $checkin = (new Checkin())->get($params['id']);
+
+        echo jsonSerialize($checkin);
+    }
+    
+
     // Função que valida o código digitado pelo usuário, pra ver se confere com o dado do estabelecimento/promoção
     public function validaCodigo () {
         // Obtém a promoção pelo ID passado por parâmetro
@@ -53,10 +61,4 @@ class ApiPromocoesController extends Controller {
             echo jsonSerialize(false);
 	}
 
-
-	public function findCheckin ($params) {
-	    $checkin = (new Checkin())->get($params['id']);
-
-	    echo jsonSerialize($checkin);
-    }
 }
