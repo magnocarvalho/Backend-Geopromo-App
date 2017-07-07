@@ -353,7 +353,7 @@ function exibePromoObtida(idPromo, idCheckin){
 
 
 
-        // Consulta o banco para pegar os dados do checkin
+        // Consulta o banco para pegar os dados do checkin e insere a data/hora na página
         $.ajax({
             url: url,
             dataType: 'json',
@@ -369,6 +369,8 @@ function exibePromoObtida(idPromo, idCheckin){
                 console.log(dado);
             }
         });
+
+        // Insere os demais dados na página
         $('#nomeEmpresa').append(dado.empresa.estabelecimento);
         $('#tituloPromo').append(dado.anuncio.titulo);
         $('#descPromo').append(dado.anuncio.descricao);
