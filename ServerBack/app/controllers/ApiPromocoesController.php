@@ -45,16 +45,18 @@ class ApiPromocoesController extends Controller {
         $promocao = (new Promocao())->get($_POST['idPromo']);
 
         $cliente = Auth::getLoggedUser();
-        // Registra o checkin do cliente com esta promocao
-        $checkin = new Checkin();
-        $checkin->setIdCliente($cliente->getId());
-        $checkin->setIdPromocao($promocao->getId());
-        $checkin->setDatahora(date('Y-m-d H:i:s'));
-        $checkin->save();
 
         // Compara o código da promoção, em maiúsculas, com o código digitado ($params[0]), também em maiúsculas
         if(strtoupper($promocao->getCodigo()) == strtoupper($_POST['codigo'])){
-            // Retorna true caso sejam iguais
+
+            // Registra o checkin do cliente com esta promocao
+            $checkin = new Checkin();
+            $checkin->setIdCliente($cliente->getId());
+            $checkin->setIdPromocao($promocao->getId());
+            $checkin->setDatahora(date('Y-m-d H:i:s'));
+            $checkin->save();
+
+            // Retorna o id do checkin caso sejam iguais
             echo jsonSerialize($checkin->getId());
         } else
             // Retorna false caso não sejam iguais
