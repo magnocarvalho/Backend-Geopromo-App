@@ -1,7 +1,7 @@
 /*
 * @author Vinicius Baroni Soares
 */
-var raio = 0.55;
+var raio = 1.5;
 var distObter = 50;
 
 urlRaiz = 'http://localhost/geopromo/ServerBack';
@@ -110,7 +110,7 @@ function contaPromos(mostraLoad){
 			if(tamanho == 1){
 				$('#cont p:first').html('Há 1 promoção próxima!');
 			} else{
-				$('#cont p:first').html('Há '+tamanho+' promoções próximas!');						
+				$('#cont p:first').html('Há '+tamanho+' promoções próximas!');
 			}
 			$('#cont p.mini').html('Toque para visualizar');
 		} else{
