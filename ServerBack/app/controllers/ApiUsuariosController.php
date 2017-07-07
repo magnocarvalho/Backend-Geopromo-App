@@ -103,4 +103,22 @@ class ApiUsuariosController extends Controller {
         Auth::doLogout();
         echo jsonSerialize(true);
     }
+
+
+
+    // Busca o histórico de promoções do usuário logado
+    public function historicoPromos () {
+        // Armazena em uma posição do vetor os cheques do dia atual e
+        $checkins['hoje'] = (new Checkin())->where(
+            'datahora BETWEEN ? AND ?',
+            [date('Y-m-d').' 00:00:00', date('Y-m-d').' 23:59:59']
+        )->find();
+
+        $checkins['anteriores'] = (new Checkin())->where(
+            'datahora < ?',
+            date('Y-m-d').' 00:00:00'
+        )->find();
+
+        echo jsonSerialize($checkins);
+    }
 }

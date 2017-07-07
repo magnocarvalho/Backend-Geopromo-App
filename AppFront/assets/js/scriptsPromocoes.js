@@ -176,7 +176,7 @@ function getPromos(mostraLoad){
 * Função que obtém o ID de um anúncio específico e faz a requisição ao servidor para
 * obter todos os dados essenciais.
 */
-function buscaPromo(idPromo, funcaoSecundaria){
+function buscaPromo(idPromo, funcaoSecundaria, dadosExtras){
 	var url = urlRaiz + '/api/findpromo/' + idPromo;
 
 	$.ajax({
@@ -184,7 +184,7 @@ function buscaPromo(idPromo, funcaoSecundaria){
 		dataType: 'json',
 		success: function(dado){
 			$('.loading-image').remove();
-			funcaoSecundaria(dado);
+			funcaoSecundaria(dado, dadosExtras);
 		},
 		error: function(dado){
 			console.log(dado);
@@ -313,28 +313,67 @@ function exibePromoObtida(idPromo, idCheckin){
 	buscaPromo(idPromo, function(dado){
         var url = urlRaiz + '/api/findcheckin/' + idCheckin;
 
+        // Formata os dados de valores da promoção, como porcentagem de desconto e valores promocionais
+        var porcdesconto;
+        if(dado.anuncio.desconto != null){
+            var valorDesconto = dado.anuncio.desconto;
+            var color;
+
+            /*
+             * Mostra o desconto em uma cor específica dependendo do valor de desconto.
+             * Passa, de forma crescente, por azul claro, azul escuro, laranja e vermelho.
+             */
+            if (valorDesconto < 25)
+                color = 'colorlightblue';
+            else if (valorDesconto < 50)
+                color = 'colordarkblue';
+            else if (valorDesconto < 75)
+                color = 'colororange';
+            else
+                color = 'colorred';
+
+            porcdesconto = '<span class="desconto ' + color + '"><span class="porcentagem">' + valorDesconto +
+                '%</span><br> de desconto</span><br>';
+        } else
+            porcdesconto = '';
+
+        // Define os conteúdos referentes aos valores a serem inseridos na página
+        var conteudo = porcdesconto;
+        if(dado.anuncio.valorDe != null && dado.anuncio.valorPor != null){
+            conteudo += '<span class="valores"><div class="meio">De R$<span class="valor valorDe">' +
+                moneyFormat(dado.anuncio.valorDe) + '</span></div>';
+            conteudo += '<div class="meio">Por R$<span class="valor valorPor">' + moneyFormat(dado.anuncio.valorPor) +
+                '</span></div></span>';
+        }
+
+
+        if(dado.empresa.foto_fachada != null)
+            $('<div id="imageheader" style="background-image: url(\''+ dado.empresa.foto_fachada +
+                '\')"></div>"').insertBefore($('#header'));
+
+
+
+        // Consulta o banco para pegar os dados do checkin
         $.ajax({
             url: url,
             dataType: 'json',
             success: function(dado){
                 var datahora = dado.Checkin.datahora;
 
-                var ano = datahora.substr(0, 4);
-                var mes = datahora.substr(5, 2);
-                var dia = datahora.substr(8, 2);
-
-                var hora = datahora.substr(11, 2);
-                var minuto = datahora.substr(14, 2);
-                var segundo = datahora.substr(17, 2);
-		        $('#dataResgate').append(dia + '/' + mes + '/' + ano + ', às ' + hora + ':' + minuto);
+                var arrDataHora = breakDateTime(datahora);
+                $('#dataResgate').append(arrDataHora['dia'] + '/' +
+                    arrDataHora['mes'] + '/' + arrDataHora['ano'] + ', às ' + arrDataHora['hora'] + ':' +
+                    arrDataHora['minuto']);
             },
             error: function(dado){
                 console.log(dado);
             }
         });
-		$('#nomeEmpresa').append(dado.empresa.estabelecimento);
-		$('#tituloPromo').append(dado.anuncio.titulo);
-	});
+        $('#nomeEmpresa').append(dado.empresa.estabelecimento);
+        $('#tituloPromo').append(dado.anuncio.titulo);
+        $('#descPromo').append(dado.anuncio.descricao);
+        $('#valoresPromo').append(conteudo);
+    });
 }
 
 
@@ -374,4 +413,114 @@ function logout () {
             alert('Não foi possível desconectar.');
         }
     });
+}
+
+
+
+
+/**
+ * Função que obtém os dados básicos de todas os anúncios próximos ao visitante
+ */
+function getHistoricoPromos(mostraLoad){
+    (mostraLoad !== null)? mostraLoad:true;
+
+    if(mostraLoad){
+        if($('.loading-image').length == 0){
+            $('body').append('<span class="loading-image load-bottom"></span>');
+        }
+    }
+    // Remove os resultados
+    $('.lista').remove();
+    $('#no-result').remove();
+
+    // Desabilita o botão de atualizar durante a atualização
+    $('.btn-update').attr('disabled', 'true');
+    $('.btn-update').addClass('btn-disabled');
+
+    $.ajax({
+        url: urlRaiz + '/api/user/history/promocoes',
+        dataType: 'json',
+        success: function(dados){
+            $('.loading-image').remove();
+
+            // PROMOÇÕES OBTIDAS HOJE:
+            $('#hoje').append('<h3 class="textleft titulohistorico">Hoje</h3>');
+
+            // Exibe cada promoção obtida "HOJE"
+            $(dados['hoje']).each(function(checkin){
+
+                $('#hoje').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
+                dados['hoje'][checkin]['id_promocao'] + '&' + dados['hoje'][checkin]['id'] + '\'" ' +
+                    'id="' + dados['hoje'][checkin]['id'] + '"></div>');
+
+                // Busca a promoção com base no checkin para exibir seus dados
+                buscaPromo(dados['hoje'][checkin]['id_promocao'], function(dado, checkin){
+                    $('#'+checkin['id']).append('<h2 class="tituloPromo">'+dado['anuncio']['titulo']+'</h2>');
+                    $('#'+checkin['id']).append('<p class="gray nomeEmpresa">'+dado['empresa']['estabelecimento']+
+                        '</p>');
+
+                    var arrDataHora = breakDateTime(checkin['datahora']);
+                    $('#'+checkin['id']).append('<b>Horário:</b><br>'+
+                        arrDataHora['hora'] + ':' + arrDataHora['minuto']);
+                }, dados['hoje'][checkin]);
+
+            });
+
+
+
+            // PROMOÇÕES OBTIDAS ANTES DE HOJE:
+            $('<div class="bloco" id="anteriores" style="max-height: none;"></span></div>')
+                .insertAfter('#hoje');
+
+            $('#anteriores').append('<h3 class="textleft titulohistorico">Anteriores</h3>');
+
+            // Exibe cada promoção obtida "ANTERIORMENTE"
+            $(dados['anteriores']).each(function(checkin){
+
+                $('#anteriores').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
+                    dados['anteriores'][checkin]['id_promocao'] + '&' + dados['anteriores'][checkin]['id'] + '\'" ' +
+                    'id="' + dados['anteriores'][checkin]['id'] + '"></div>');
+
+                // Busca a promoção com base no checkin para exibir seus dados
+                buscaPromo(dados['anteriores'][checkin]['id_promocao'], function(dado, checkin){
+                    $('#'+checkin['id']).append('<h2 class="tituloPromo">'+dado['anuncio']['titulo']+'</h2>');
+                    $('#'+checkin['id']).append('<p class="gray nomeEmpresa">'+dado['empresa']['estabelecimento']+
+                        '</p>');
+
+                    var arrDataHora = breakDateTime(checkin['datahora']);
+                    $('#'+checkin['id']).append('<b>Data:</b><br>'+
+                        arrDataHora['dia'] + '/' + arrDataHora['mes'] + arrDataHora['ano'] + ', às ' +
+                        arrDataHora['hora'] + ':' + arrDataHora['minuto']);
+                }, dados['anteriores'][checkin]);
+
+            });
+        },
+        error: function(dados){
+            console.log(dados);
+            alert('Houve um erro.');
+        }
+    });
+}
+
+
+// Função que quebra uma datetime/timestamp e retorna um vetor com cada valor da data
+function breakDateTime (datahora) {
+    var ano = datahora.substr(0, 4);
+    var mes = datahora.substr(5, 2);
+    var dia = datahora.substr(8, 2);
+
+    var hora = datahora.substr(11, 2);
+    var minuto = datahora.substr(14, 2);
+    var segundo = datahora.substr(17, 2);
+
+    return {ano:ano, mes:mes, dia:dia, hora:hora, minuto:minuto, segundo:segundo}
+}
+
+// Função que quebra uma date e retorna um vetor com cada valor da data
+function breakDate (date) {
+    var ano = date.substr(0, 4);
+    var mes = date.substr(5, 2);
+    var dia = date.substr(8, 2);
+
+    return {ano:ano, mes:mes, dia:dia}
 }

@@ -28,31 +28,46 @@ function toArray ($data) {
 	if(is_array($data) && sizeof($data) > 1){
 		// Passa por todas as posições do vetor
 		foreach($data as $i => $obj) {
-			$reflection = new ReflectionClass($obj);
-			$properties = $reflection->getProperties();
+            // Verifica se a posiçãoatual do vetor é vetor também
+		    if(is_array($obj)) {
+		        $arrProperties[$i] = toArray($obj);
 
-			// Passa por todas as propriedades do objeto e obtém seus valores em um vetor
-			foreach ($properties as $property) {
-				$className = $property->class;
-				// Não adiciona o atributo 'primarykey' ao array de propriedades do objeto
-				if ($property->name != 'primarykey') {
-					$function = 'get'.ucfirst($property->name); // Obtém o nome da função get
-					
-					if( method_exists($obj, $function) ) {
-						$value = $obj->$function(); // Obtem o valor da propriedade
-					} else {
-						$value = null;
-					}
-					
-					// Verifica se o atributo é um objeto ou um tipo primitivo de dados
-					if (is_object($value)){
-						// Serializa as propriedades do objeto filho
-						$arrProperties[$i][$property->name] = $value->toArray();
-					} else {
-						$arrProperties[$i][$property->name] = $value;
-					}
-				}
-			}
+            } else {
+		        // Se não for vetor, trata como objeto
+                $reflection = new ReflectionClass($obj);
+                $properties = $reflection->getProperties();
+
+                // Passa por todas as propriedades do objeto e obtém seus valores em um vetor
+                foreach ($properties as $property) {
+                    $className = $property->class;
+                    // Não adiciona o atributo 'primarykey' ao array de propriedades do objeto
+                    if ($property->name != 'primarykey') {
+
+                        $funcNameParts = explode('_', $property->name);
+                        foreach ($funcNameParts as $j => $part) {
+                            $funcNameParts[$j] = ucfirst($part);
+                        }
+                        $funcName = implode('', $funcNameParts);
+
+                        $function = 'get' . $funcName; // Obtém o nome da função get
+
+                        if (method_exists($obj, $function)) {
+                            $value = $obj->$function(); // Obtem o valor da propriedade
+                        } else {
+                            $value = null;
+                        }
+
+                        // Verifica se o atributo é um objeto ou um tipo primitivo de dados
+                        if (is_object($value)) {
+                            // Serializa as propriedades do objeto filho
+                            $arrProperties[$i][$property->name] = $value->toArray();
+                        } else {
+                            // Cria um vetor com todas as propriedades do objeto
+                            $arrProperties[$i][$property->name] = $value;
+                        }
+                    }
+                }
+            }
 		}
 	} else if (is_array($data) && sizeof($data) == 1){
 		$arrProperties = singleToArray($data[0]);
@@ -72,9 +87,9 @@ function filterPost () {
 	return filter_var_array($_POST, FILTER_SANITIZE_STRING);
 }
 
-function filterPut () {
-	return filter_var_array($_PUT, FILTER_SANITIZE_STRING);
-}
+//function filterPut () {
+//	return filter_var_array($_PUT, FILTER_SANITIZE_STRING);
+//}
 
 function filterGet () {
 	return filter_var_array($_GET, FILTER_SANITIZE_STRING);

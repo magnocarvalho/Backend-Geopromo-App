@@ -22,4 +22,5 @@ $route['api/user/checksenha'] = 'ApiUsuariosController/checkSenha';
 $route['api/user/register/email'] = 'ApiUsuariosController/registroEmail';
 $route['api/user/register/senha'] = 'ApiUsuariosController/registroSenha';
 $route['api/user/register/dados'] = 'ApiUsuariosController/registroDados';
+$route['api/user/history/promocoes'] = 'ApiUsuariosController/historicoPromos';
 $route['api/user/logout'] = 'ApiUsuariosController/logout';

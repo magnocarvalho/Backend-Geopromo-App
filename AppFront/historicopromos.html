@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Vinicius Baroni Soares">
+	<meta name="theme-color" content="rgb(60,60,60)">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link rel="shortcut icon" type="image/png" href="assets/images/logo.png">
+	<script type="text/javascript" src="assets/js/jquery-3.1.0.js"></script>
+	<script type="text/javascript" src="assets/js/scriptsPromocoes.js"></script>
+
+	<title>GeoPromo</title>
+	<script type="text/javascript">
+        window.onload = getAuth(function () {
+            getHistoricoPromos();
+        });
+	</script>
+
+	<style>
+		.lista {
+			/*border-top: 1px solid rgb(200,200,200);*/
+		}
+	</style>
+</head>
+<body>
+	<div id="colorheader"></div>
+
+	<div id="header">
+		<div id="header-content">
+			<span class="headertext">
+				<span class="icon back-icon" onclick="location.href='index.html'"></span>
+				<span class="texto">
+					Histórico de promoções
+				</span>				
+			</span>
+		</div>
+	</div>
+
+	<div class="container bloco" id="hoje" style="max-height: none;">
+		<span class="loading-image"></span>
+	</div>
+	
+	<button class="btn btn-rounded btn-update" onclick="getHistoricoPromos(true)" style="display:none;"></button>
+</body>
+</html>
