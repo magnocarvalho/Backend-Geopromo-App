@@ -512,7 +512,7 @@ function getHistoricoPromos(mostraLoad){
 
                         var arrDataHora = breakDateTime(checkin['datahora']);
                         $('#' + checkin['id']).append('<b>Data:</b><br>' +
-                            arrDataHora['dia'] + '/' + arrDataHora['mes'] + arrDataHora['ano'] + ', às ' +
+                            arrDataHora['dia'] + '/' + arrDataHora['mes'] + '/' + arrDataHora['ano'] + ', às ' +
                             arrDataHora['hora'] + ':' + arrDataHora['minuto']);
                     }, dados['anteriores'][checkin]);
 
@@ -531,7 +531,7 @@ function getHistoricoPromos(mostraLoad){
 
                     var arrDataHora = breakDateTime(checkin.datahora);
                     $('#' + checkin.id).append('<b>Data:</b><br>' +
-                        arrDataHora['dia'] + '/' + arrDataHora['mes'] + arrDataHora['ano'] + ', às ' +
+                        arrDataHora['dia'] + '/' + arrDataHora['mes'] + '/' + arrDataHora['ano'] + ', às ' +
                         arrDataHora['hora'] + ':' + arrDataHora['minuto']);
                 }, dados['anteriores'].Checkin);
             } else {
