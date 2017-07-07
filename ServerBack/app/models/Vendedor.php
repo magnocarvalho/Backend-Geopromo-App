@@ -9,6 +9,8 @@ class Vendedor extends Model {
     private $longitude;
     private $telefone;
     private $logotipo;
+    private $foto_fachada;
+    private $ativo;
 
 
     public function getId()
@@ -89,6 +91,26 @@ class Vendedor extends Model {
     public function setLogotipo($logotipo)
     {
         $this->logotipo = $logotipo;
+    }
+
+    public function getFotoFachada()
+    {
+        return $this->foto_fachada;
+    }
+
+    public function setFotoFachada($foto_fachada)
+    {
+        $this->foto_fachada = $foto_fachada;
+    }
+
+    public function getAtivo()
+    {
+        return $this->ativo;
+    }
+
+    public function setAtivo($ativo)
+    {
+        $this->ativo = $ativo;
     }
 
 

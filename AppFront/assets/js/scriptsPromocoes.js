@@ -271,8 +271,8 @@ function exibePromo(idPromo, mostraLoad){
                 $('.headertext .texto').append(dado.empresa.razaosocial);
 
                 if(dado.empresa.foto_fachada != null)
-                    $('<div id="imageheader" style="background-image: url(\''+ dado.empresa.foto_fachada +
-                        '\')"></div>"').insertBefore($('#header'));
+                    $('<div id="imageheader" style="background-image: url(\'' + urlRaiz + '/assets/images/uploads/' +
+                        dado.empresa.foto_fachada + '\')"></div>"').insertBefore($('#header'));
             },
             error: function (data) {
                 console.log(data);
@@ -406,8 +406,8 @@ function exibePromoObtida(idPromo, idCheckin){
 
 
         if(dado.empresa.foto_fachada != null)
-            $('<div id="imageheader" style="background-image: url(\''+ dado.empresa.foto_fachada +
-                '\')"></div>"').insertBefore($('#header'));
+            $('<div id="imageheader" style="background-image: url(\'' + urlRaiz + '/assets/images/uploads/' +
+                dado.empresa.foto_fachada + '\')"></div>"').insertBefore($('#header'));
 
 
 

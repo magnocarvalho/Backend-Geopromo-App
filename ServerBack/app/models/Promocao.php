@@ -16,6 +16,7 @@ class Promocao extends Model {
 	private $inicio;
 	private $fim;
 	private $codigo;
+	private $ativo;
 
 
     public function getId()
@@ -167,4 +168,16 @@ class Promocao extends Model {
     {
         $this->codigo = $codigo;
     }
+
+    public function getAtivo()
+    {
+        return $this->ativo;
+    }
+
+    public function setAtivo($ativo)
+    {
+        $this->ativo = $ativo;
+    }
+
+
 }

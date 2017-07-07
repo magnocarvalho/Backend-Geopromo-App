@@ -58,7 +58,7 @@ sup, sub{
 		height: 110px;
 		background-size: cover;
 		background-position: center center;
-		opacity: 0.5;
+		opacity: 0.25;
 		z-index: -2;
 	}
 
@@ -205,6 +205,14 @@ sup, sub{
 	box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 	min-height: 60px;
 	max-width: 730px;
+}
+
+
+/**
+ * Bloco um pouco mais afastado do topo, para separar conjuntos de conteúdos
+ */
+.bloco-separador {
+	margin-top: 45px;
 }
 
 /**
