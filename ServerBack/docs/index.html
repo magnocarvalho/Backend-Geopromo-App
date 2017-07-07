@@ -84,6 +84,7 @@
 				<a href="#dbclassjoin"><li><i>DB->join()</i></li></a>
 				<a href="#dbclasswhere"><li><i>DB->where()</i></li></a>
 				<a href="#dbclassfind"><li><i>find()</i></li></a>
+				<a href="#dbclassgensql"><li><i>generatedSql()</i></li></a>
 				<a href="#dbclassall"><li><i>DB::all()</i></li></a>
 				<a href="#dbclasssave"><li><i>DB::save()</i></li></a>
 				<a href="#dbclassdelete"><li><i>DB::delete()</i></li></a>
@@ -139,7 +140,6 @@
 		<a href="#formfunc"><h3>Processamento de Formulários</h3></a>
 		<ul class="nolist">
 			<a href="#filterpost"><li><i>filterPost()</i></li></a>
-			<a href="#filterput"><li><i>filterPut()</i></li></a>
 			<a href="#filterget"><li><i>filterGet()</i></li></a>
 			<a href="#orderfiles"><li><i>orderFiles()</i></li></a>
 			<a href="#withvalues"><li><i>withValues()</i></li></a>
@@ -1207,6 +1207,19 @@
 				Retorna o objeto salvo em caso de sucesso ou <b>NULL</b> caso contrário.
 			</p>
 			<br>
+			<a name="dbclassgensql"><b><i>generatedSql()</i></b></a>
+			<p>
+				Retorna o código SQL gerado pelas demais funções da classe DB.
+			</p>
+			<span class="pregroup">
+				<pre>object:DB <b>find (</b> <b>)</b></pre>
+				<pre><br><b>Usage example:</b></pre>
+				<pre>(new DB)->select ('id, age', 'Cat')->generatedSql (); <i class="comment">// Retorna o SQL gerado para esta consulta</i></pre>
+			</span>
+			<p>
+				Retorna uma string com o código SQL gerado pelas demais funções da classe.
+			</p>
+			<br>
 			<a name="dbclassall"><b><i>DB::all()</i></b></a>
 			<p>
 				Recebe uma string <b>$table</b> por parâmetro e busca no banco por todos os dados da tabela passada.
@@ -1344,7 +1357,7 @@
 		<p>
 			Recebe os dados do usuário definidos por <b>$user</b> e cria as variáveis de sessão 
 			utilizadas pelas demais funções da classe <b>Auth</b> e redireciona à página definida
-			por <b>$redirectLocation</b> ou para a página inicial, caso esta não seja passada.
+			por <b>$redirectLocation</b>, caso seja passada para a função.
 		</p>
 		<span class="pregroup">
 			<pre>void <b>createAuthSession (</b> $user,  [string $redirectLocation = NULL] <b>)</b></pre>
@@ -1976,19 +1989,6 @@
 		</span>
 		<p>
 			Retorna um array com os valores recebidos pelo método POST.
-		</p>
-		<br>
-		<a name="filterput"><h3><i>filterPut()</i></h3></a>
-		<p>
-			Filtra e retorna os dados recebidos pelo método PUT.
-		</p>
-		<span class="pregroup">
-			<pre>array <b>filterPut (</b> <b>)</b></pre>
-			<pre><br><b>Usage example:</b></pre>
-			<pre>$data = $filterPut (); <i class="comment">// $data receberá os dados enviados por PUT já filtrados</i> </pre>
-		</span>
-		<p>
-			Retorna um array com os valores recebidos pelo método PUT.
 		</p>
 		<br>
 		<a name="filterget"><h3><i>filterGet()</i></h3></a>

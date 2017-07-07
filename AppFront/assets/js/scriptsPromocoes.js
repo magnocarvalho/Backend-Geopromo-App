@@ -1,7 +1,7 @@
 /*
 * @author Vinicius Baroni Soares
 */
-var raio = 1.45;
+var raio = 0.55;
 var distObter = 50;
 
 urlRaiz = 'http://localhost/geopromo/ServerBack';
@@ -118,6 +118,8 @@ function contaPromos(mostraLoad){
 			$('#cont #contador').html('0');
 			$('#cont p:first').html('Não há nenhuma promoção próxima a você.');
 		}
+
+		$('.container').attr('onclick', "location.href='lista.html'");
 
 		/*
 		* Teste de rolagem da página com mais blocos na inicial. Fazer dela um hub de funções.
