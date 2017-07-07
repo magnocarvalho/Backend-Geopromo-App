@@ -12,6 +12,8 @@
 
 $route['api/countclose'] = 'ApiPromocoesController/countClose';
 $route['api/getclose'] = 'ApiPromocoesController/getClose';
+$route['api/getdistance'] = 'ApiPromocoesController/getDistanceToSeller';
+$route['api/countview'] = 'ApiPromocoesController/countView';
 $route['api/findpromo/?'] = 'ApiPromocoesController/findPromo';
 $route['api/findcheckin/?'] = 'ApiPromocoesController/findCheckin';
 $route['api/validacodigo'] = 'ApiPromocoesController/validaCodigo';

@@ -11,6 +11,7 @@ class ApiPromocoesController extends Controller {
         echo jsonSerialize($geo->contaProximos($_POST['latitude'], $_POST['longitude'], $_POST['raio']));
     }
 
+
     // Função que obtém as promoções próximas
 	public function getClose () {
 	    // Cria um objeto do tipo GeoLocal, o qual contém as funções básicas para lidar com a geolocalização
@@ -19,6 +20,49 @@ class ApiPromocoesController extends Controller {
         // Imprime um json dos resultados obtidos da função de obter os dados próximos
         echo jsonSerialize($geo->pegaProximos($_POST['latitude'], $_POST['longitude'], $_POST['raio']));
     }
+
+
+    // Função que obtém a distância do usuário de um dado estabelecimento
+	public function getDistanceToSeller () {
+	    // Cria um objeto do tipo GeoLocal, o qual contém as funções básicas para lidar com a geolocalização
+        $geo = new GeoLocal();
+
+        // Obtém os dados da promoção e do estabelecimento para comparar a distância
+        $promo = (new Promocao())->get($_POST['promocao']);
+        $estabelecimento = (new Vendedor())->get($promo->getIdVendedor());
+
+        $dist = $geo->calcDistancia(
+            $_POST['latitude'],
+            $_POST['longitude'],
+            $estabelecimento->getLatitude(),
+            $estabelecimento->getLongitude()
+        );
+
+
+        // Imprime um json com a distância em metros entre o usuário e o vendedor
+        echo jsonSerialize(number_format(
+            $dist*1000,
+            0,
+            ',',
+            '.'
+        )); // Distância em metros
+    }
+
+
+    // Função que realiza os registros de visualizações de uma promoção
+    public function countView () {
+	    $cliente = Auth::getLoggedUser();
+
+	    $view = new Visualizacao();
+	    $view->setDatahora(date('Y-m-d H:i:s'));
+	    $view->setIdPromocao($_POST['idPromo']);
+	    $view->setIdCliente($cliente->getId());
+
+	    $view->save();
+
+	    echo jsonSerialize(true);
+    }
+
 
     // Função que busca os dados referentes a uma dada promoção e a empresa (vendedor) relacionada
     public function findPromo ($params) {
@@ -63,5 +107,8 @@ class ApiPromocoesController extends Controller {
             // Retorna false caso não sejam iguais
             echo jsonSerialize(false);
 	}
+
+
+	// Função que obtém a posição atual do usuário e vê a distãncia do estabelecimento
 
 }

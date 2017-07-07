@@ -206,60 +206,73 @@ function exibePromo(idPromo, mostraLoad){
 	}
 
 	buscaPromo(idPromo, function(dado){
-		var descricao
-		if(dado.anuncio.descricao == null)
-			descricao = '<i class="gray">[Nenhuma descrição]</i>';
-		else
-			descricao = dado.anuncio.descricao;
 
-		var porcdesconto;
-		if(dado.anuncio.desconto != null){
-			var valorDesconto = dado.anuncio.desconto;
-			var color;
+        var url = urlRaiz + '/api/countview';
 
-			/*
-			* Mostra o desconto em uma cor específica dependendo do valor de desconto.
-			* Passa, de forma crescente, por azul claro, azul escuro, laranja e vermelho.
-			*/
-			if (valorDesconto < 25)
-				color = 'colorlightblue';
-			else if (valorDesconto < 50)
-				color = 'colordarkblue';
-			else if (valorDesconto < 75)
-				color = 'colororange';
-			else
-				color = 'colorred';
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            method: 'post',
+            data: {'idPromo': dado.anuncio.id},
+            success: function (data) {
+                var descricao
+                if(dado.anuncio.descricao == null)
+                    descricao = '<i class="gray">[Nenhuma descrição]</i>';
+                else
+                    descricao = dado.anuncio.descricao;
 
-			porcdesconto = '<span class="desconto ' + color + '"><span class="porcentagem">' + valorDesconto +
-                '%</span><br> de desconto</span><br>';
-		} else
-			porcdesconto = '';
+                var porcdesconto;
+                if(dado.anuncio.desconto != null){
+                    var valorDesconto = dado.anuncio.desconto;
+                    var color;
 
-		/**
-		* Define todo o texto a se inserido na página
-		*/
-		var conteudo = '<h2 class="tituloPromo">' + dado.anuncio.titulo + ' </h2>';
-		conteudo += '<span class="descanuncio">'+ descricao +'</span><br>';
-		conteudo += porcdesconto;
-		if(dado.anuncio.valorDe != null && dado.anuncio.valorPor != null){
-			conteudo += '<span class="valores"><div class="meio">De R$<span class="valor valorDe">' +
-                moneyFormat(dado.anuncio.valorDe) + '</span></div>';
-			conteudo += '<div class="meio">Por R$<span class="valor valorPor">' + moneyFormat(dado.anuncio.valorPor) +
-                '</span></div></span>';
-		}
-		conteudo += '<span class="dist-block full divisor"><b class="mini">Distância (última atualização): </b>' +
-            distanciaCalculada + ' m<br></span>'
-		if(distanciaCalculada <= distObter)
-			conteudo += '<span class="btn btn-square" onclick="location.href=\'obterpromocao.html?' + idPromo +
-                '\'">Eu quero!</span>';
+                    /*
+                     * Mostra o desconto em uma cor específica dependendo do valor de desconto.
+                     * Passa, de forma crescente, por azul claro, azul escuro, laranja e vermelho.
+                     */
+                    if (valorDesconto < 25)
+                        color = 'colorlightblue';
+                    else if (valorDesconto < 50)
+                        color = 'colordarkblue';
+                    else if (valorDesconto < 75)
+                        color = 'colororange';
+                    else
+                        color = 'colorred';
 
-		$('.container').append(conteudo);
-		$('.headertext .texto').append(dado.empresa.razaosocial);
-		
-		if(dado.empresa.foto_fachada != null)
-			$('<div id="imageheader" style="background-image: url(\''+ dado.empresa.foto_fachada +
-                '\')"></div>"').insertBefore($('#header'));
-	
+                    porcdesconto = '<span class="desconto ' + color + '"><span class="porcentagem">' + valorDesconto +
+                        '%</span><br> de desconto</span><br>';
+                } else
+                    porcdesconto = '';
+
+                /**
+                 * Define todo o texto a se inserido na página
+                 */
+                var conteudo = '<h2 class="tituloPromo">' + dado.anuncio.titulo + ' </h2>';
+                conteudo += '<span class="descanuncio">'+ descricao +'</span><br>';
+                conteudo += porcdesconto;
+                if(dado.anuncio.valorDe != null && dado.anuncio.valorPor != null){
+                    conteudo += '<span class="valores"><div class="meio">De R$<span class="valor valorDe">' +
+                        moneyFormat(dado.anuncio.valorDe) + '</span></div>';
+                    conteudo += '<div class="meio">Por R$<span class="valor valorPor">' + moneyFormat(dado.anuncio.valorPor) +
+                        '</span></div></span>';
+                }
+                conteudo += '<span class="dist-block full divisor"><b class="mini">Distância (última atualização): </b>' +
+                    distanciaCalculada + ' m<br></span>'
+                if(distanciaCalculada <= distObter)
+                    conteudo += '<span class="btn btn-square" onclick="location.href=\'obterpromocao.html?' + idPromo +
+                        '\'">Eu quero!</span>';
+
+                $('.container').append(conteudo);
+                $('.headertext .texto').append(dado.empresa.razaosocial);
+
+                if(dado.empresa.foto_fachada != null)
+                    $('<div id="imageheader" style="background-image: url(\''+ dado.empresa.foto_fachada +
+                        '\')"></div>"').insertBefore($('#header'));
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
 	});
 }
 
@@ -278,32 +291,72 @@ function exibeObterPromo($idPromo){
 * se o código digitado está correto.
 */
 function validaCodigo(){
-	$('.alert').remove();
 
-	var idPromo = $('#idPromo').val();
-	var codigoDigitado = $('#codigo').val();
+    var idPromo = $('#idPromo').val();
+    var codigoDigitado = $('#codigo').val();
 
-	if(codigoDigitado == '') {
-		$('.alert-erro').remove();
-        $('<span class="alert alert-erro">Insira o código da empresa.</span>').insertAfter('#codigo');
-    } else{
-		$.ajax({
-			url: urlRaiz + '/api/validacodigo',
-			dataType: 'json',
-            method: 'post',
-            data: {'idPromo':idPromo, 'codigo':codigoDigitado},
-			success: function(dados){
-				if(dados == false)
-					$('<span class="alert alert-erro">O código digitado é inválido.</span>').insertAfter('#codigo');
-				else
-					location.href='promocaoresgatada.html?' + idPromo + '&' + dados;
-			},
-			error: function(dados){
-				console.log(dados);
-				alert('Não foi possível realizar a validação do código.');
-			}
-		});
-	}
+    // Busca a localização atual do usuário para saber a distância entre ele e o vendedor
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(function(position){
+            // Função em caso de sucesso ao obter a posição do usuário
+            var lat = position.coords.latitude;
+            var long = position.coords.longitude;
+            var url = urlRaiz + '/api/getdistance';
+
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                method: 'post',
+                data: {'latitude': lat, 'longitude':long, 'promocao':idPromo},
+                success: function(data) {
+                    $('.alert').remove();
+
+
+                    if (codigoDigitado == '') {
+                        $('.alert-erro').remove();
+                        $('<span class="alert alert-erro">Insira o código da empresa.</span>').insertAfter('#codigo');
+
+                    } else if(data > distObter) { // Caso a distância entre o usuário e o vendedor seja maior a 50m
+                        $('.alert-erro').remove();
+                        $('<span class="alert alert-erro">Você está muito da empresa para solicitar esta promoção.' +
+                            '</span>').insertAfter('#codigo');
+                    }else{
+                        $.ajax({
+                            url: urlRaiz + '/api/validacodigo',
+                            dataType: 'json',
+                            method: 'post',
+                            data: {'idPromo':idPromo, 'codigo':codigoDigitado},
+                            success: function(dados){
+                                if(dados == false)
+                                    $('<span class="alert alert-erro">O código digitado é inválido.</span>').insertAfter('#codigo');
+                                else
+                                    location.href='promocaoresgatada.html?' + idPromo + '&' + dados;
+                            },
+                            error: function(dados){
+                                console.log(dados);
+                                alert('Não foi possível realizar a validação do código.');
+                            }
+                        });
+                    }
+                },
+                error: function(data, noMessage){
+                    if(noMessage == false){
+                        alert('Houve um problema');
+                        console.log(data);
+                    }
+                }
+            });
+        }, function(error, noMessage){
+            // Função em caso de falha na obtenção dos dados geográficos
+            if(noMessage == false){
+                alert('Não foi possível obter sua localização. (Erro ' + error.code + ')');
+            }
+        })
+    }
+    else{
+        // Execução em caso de o navegador cliente não oferecer suporte
+        alert('Você deve usar um navegador compatível com geolocalização e compartilhar seu local para usar o sistema.');
+    }
 }
 
 /**
@@ -450,7 +503,7 @@ function getHistoricoPromos(mostraLoad){
             $('#hoje').append('<h3 class="textleft titulohistorico">Hoje</h3>');
 
             // Exibe cada promoção obtida "HOJE"
-            if($(dados['hoje']).length > 1) {
+            if($(dados['hoje']).length > 1) { // Caso haja mais de uma
                 $(dados['hoje']).each(function (checkin) {
                     $('#hoje').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
                         dados['hoje'][checkin]['id_promocao'] + '&' + dados['hoje'][checkin]['id'] + '\'" ' +
@@ -468,8 +521,7 @@ function getHistoricoPromos(mostraLoad){
                     }, dados['hoje'][checkin]);
 
                 });
-            } else if ($(dados['hoje']).length === 1){
-                console.log(dados['hoje']);
+            } else if ($(dados['hoje']).length === 1){ // Caso haja apenas uma
                     $('#hoje').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
                         dados['hoje'].Checkin.id_promocao + '&' + dados['hoje'].Checkin.id + '\'" ' +
                         'id="' + dados['hoje'].Checkin.id + '"></div>');
@@ -484,8 +536,8 @@ function getHistoricoPromos(mostraLoad){
                         $('#' + checkin.id).append('<b>Horário:</b><br>' +
                             arrDataHora['hora'] + ':' + arrDataHora['minuto']);
                     }, dados['hoje'].Checkin);
-            } else {
-                $('#hoje').append('<p class="textcontent">Nada por hoje</p>');
+            } else { // Caso não haja nenhuma
+                $('#hoje').append('<p class="textcontent">Nada ainda. Que tal aproveitar umas promoções?</p>');
             }
 
 
@@ -497,7 +549,7 @@ function getHistoricoPromos(mostraLoad){
             $('#anteriores').append('<h3 class="textleft titulohistorico">Anteriores</h3>');
 
             // Exibe cada promoção obtida "ANTERIORMENTE"
-            if($(dados['anteriores']).length > 1) {
+            if($(dados['anteriores']).length > 1) { // Caso haja mais de uma
                 $(dados['anteriores']).each(function (checkin) {
 
                     $('#anteriores').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
@@ -517,8 +569,7 @@ function getHistoricoPromos(mostraLoad){
                     }, dados['anteriores'][checkin]);
 
                 });
-            } else if($(dados['anteriores']).length === 1) {
-                console.log(dados['anteriores']);
+            } else if($(dados['anteriores']).length === 1) { // Caso haja apenas uma
                 $('#anteriores').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
                     dados['anteriores'].Checkin.id_promocao + '&' + dados['anteriores'].Checkin.id + '\'" ' +
                     'id="' + dados['anteriores'].Checkin.id + '"></div>');
@@ -534,7 +585,7 @@ function getHistoricoPromos(mostraLoad){
                         arrDataHora['dia'] + '/' + arrDataHora['mes'] + arrDataHora['ano'] + ', às ' +
                         arrDataHora['hora'] + ':' + arrDataHora['minuto']);
                 }, dados['anteriores'].Checkin);
-            } else {
+            } else { // Caso não haja nenhuma
                 $('#anteriores').append('<p class="textcontent">Não há nada em seu histórico de dias anteriores</p>');
             }
         },
