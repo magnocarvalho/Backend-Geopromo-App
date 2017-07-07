@@ -443,30 +443,50 @@ function getHistoricoPromos(mostraLoad){
         url: urlRaiz + '/api/user/history/promocoes',
         dataType: 'json',
         success: function(dados){
+            console.log(dados);
             $('.loading-image').remove();
 
             // PROMOÇÕES OBTIDAS HOJE:
             $('#hoje').append('<h3 class="textleft titulohistorico">Hoje</h3>');
 
             // Exibe cada promoção obtida "HOJE"
-            $(dados['hoje']).each(function(checkin){
+            if($(dados['hoje']).length > 1) {
+                $(dados['hoje']).each(function (checkin) {
+                    $('#hoje').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
+                        dados['hoje'][checkin]['id_promocao'] + '&' + dados['hoje'][checkin]['id'] + '\'" ' +
+                        'id="' + dados['hoje'][checkin]['id'] + '"></div>');
 
-                $('#hoje').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
-                dados['hoje'][checkin]['id_promocao'] + '&' + dados['hoje'][checkin]['id'] + '\'" ' +
-                    'id="' + dados['hoje'][checkin]['id'] + '"></div>');
+                    // Busca a promoção com base no checkin para exibir seus dados
+                    buscaPromo(dados['hoje'][checkin]['id_promocao'], function (dado, checkin) {
+                        $('#' + checkin['id']).append('<h2 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h2>');
+                        $('#' + checkin['id']).append('<p class="gray nomeEmpresa">' + dado['empresa']['estabelecimento'] +
+                            '</p>');
 
-                // Busca a promoção com base no checkin para exibir seus dados
-                buscaPromo(dados['hoje'][checkin]['id_promocao'], function(dado, checkin){
-                    $('#'+checkin['id']).append('<h2 class="tituloPromo">'+dado['anuncio']['titulo']+'</h2>');
-                    $('#'+checkin['id']).append('<p class="gray nomeEmpresa">'+dado['empresa']['estabelecimento']+
-                        '</p>');
+                        var arrDataHora = breakDateTime(checkin['datahora']);
+                        $('#' + checkin['id']).append('<b>Horário:</b><br>' +
+                            arrDataHora['hora'] + ':' + arrDataHora['minuto']);
+                    }, dados['hoje'][checkin]);
 
-                    var arrDataHora = breakDateTime(checkin['datahora']);
-                    $('#'+checkin['id']).append('<b>Horário:</b><br>'+
-                        arrDataHora['hora'] + ':' + arrDataHora['minuto']);
-                }, dados['hoje'][checkin]);
+                });
+            } else if ($(dados['hoje']).length === 1){
+                console.log(dados['hoje']);
+                    $('#hoje').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
+                        dados['hoje'].Checkin.id_promocao + '&' + dados['hoje'].Checkin.id + '\'" ' +
+                        'id="' + dados['hoje'].Checkin.id + '"></div>');
 
-            });
+                    // Busca a promoção com base no checkin para exibir seus dados
+                    buscaPromo(dados['hoje'].Checkin.id_promocao, function (dado, checkin) {
+                        $('#' + checkin.id).append('<h2 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h2>');
+                        $('#' + checkin.id).append('<p class="gray nomeEmpresa">' + dado['empresa']['estabelecimento'] +
+                            '</p>');
+
+                        var arrDataHora = breakDateTime(checkin.datahora);
+                        $('#' + checkin.id).append('<b>Horário:</b><br>' +
+                            arrDataHora['hora'] + ':' + arrDataHora['minuto']);
+                    }, dados['hoje'].Checkin);
+            } else {
+                $('#hoje').append('<p class="textcontent">Nada por hoje</p>');
+            }
 
 
 
@@ -477,25 +497,46 @@ function getHistoricoPromos(mostraLoad){
             $('#anteriores').append('<h3 class="textleft titulohistorico">Anteriores</h3>');
 
             // Exibe cada promoção obtida "ANTERIORMENTE"
-            $(dados['anteriores']).each(function(checkin){
+            if($(dados['anteriores']).length > 1) {
+                $(dados['anteriores']).each(function (checkin) {
 
+                    $('#anteriores').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
+                        dados['anteriores'][checkin]['id_promocao'] + '&' + dados['anteriores'][checkin]['id'] + '\'" ' +
+                        'id="' + dados['anteriores'][checkin]['id'] + '"></div>');
+
+                    // Busca a promoção com base no checkin para exibir seus dados
+                    buscaPromo(dados['anteriores'][checkin]['id_promocao'], function (dado, checkin) {
+                        $('#' + checkin['id']).append('<h2 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h2>');
+                        $('#' + checkin['id']).append('<p class="gray nomeEmpresa">' + dado['empresa']['estabelecimento'] +
+                            '</p>');
+
+                        var arrDataHora = breakDateTime(checkin['datahora']);
+                        $('#' + checkin['id']).append('<b>Data:</b><br>' +
+                            arrDataHora['dia'] + '/' + arrDataHora['mes'] + arrDataHora['ano'] + ', às ' +
+                            arrDataHora['hora'] + ':' + arrDataHora['minuto']);
+                    }, dados['anteriores'][checkin]);
+
+                });
+            } else if($(dados['anteriores']).length === 1) {
+                console.log(dados['anteriores']);
                 $('#anteriores').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
-                    dados['anteriores'][checkin]['id_promocao'] + '&' + dados['anteriores'][checkin]['id'] + '\'" ' +
-                    'id="' + dados['anteriores'][checkin]['id'] + '"></div>');
+                    dados['anteriores'].Checkin.id_promocao + '&' + dados['anteriores'].Checkin.id + '\'" ' +
+                    'id="' + dados['anteriores'].Checkin.id + '"></div>');
 
                 // Busca a promoção com base no checkin para exibir seus dados
-                buscaPromo(dados['anteriores'][checkin]['id_promocao'], function(dado, checkin){
-                    $('#'+checkin['id']).append('<h2 class="tituloPromo">'+dado['anuncio']['titulo']+'</h2>');
-                    $('#'+checkin['id']).append('<p class="gray nomeEmpresa">'+dado['empresa']['estabelecimento']+
+                buscaPromo(dados['anteriores'].Checkin.id_promocao, function (dado, checkin) {
+                    $('#' + checkin.id).append('<h2 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h2>');
+                    $('#' + checkin.id).append('<p class="gray nomeEmpresa">' + dado['empresa']['estabelecimento'] +
                         '</p>');
 
-                    var arrDataHora = breakDateTime(checkin['datahora']);
-                    $('#'+checkin['id']).append('<b>Data:</b><br>'+
+                    var arrDataHora = breakDateTime(checkin.datahora);
+                    $('#' + checkin.id).append('<b>Data:</b><br>' +
                         arrDataHora['dia'] + '/' + arrDataHora['mes'] + arrDataHora['ano'] + ', às ' +
                         arrDataHora['hora'] + ':' + arrDataHora['minuto']);
-                }, dados['anteriores'][checkin]);
-
-            });
+                }, dados['anteriores'].Checkin);
+            } else {
+                $('#anteriores').append('<p class="textcontent">Não há nada em seu histórico de dias anteriores</p>');
+            }
         },
         error: function(dados){
             console.log(dados);

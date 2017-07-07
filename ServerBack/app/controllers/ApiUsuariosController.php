@@ -112,12 +112,12 @@ class ApiUsuariosController extends Controller {
         $checkins['hoje'] = (new Checkin())->where(
             'datahora BETWEEN ? AND ?',
             [date('Y-m-d').' 00:00:00', date('Y-m-d').' 23:59:59']
-        )->find();
+        )->orderBy('datahora', 'desc')->find();
 
         $checkins['anteriores'] = (new Checkin())->where(
             'datahora < ?',
             date('Y-m-d').' 00:00:00'
-        )->find();
+        )->orderBy('datahora', 'desc')->find();
 
         echo jsonSerialize($checkins);
     }
