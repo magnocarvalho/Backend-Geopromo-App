@@ -209,6 +209,7 @@ function exibePromo(idPromo, mostraLoad){
 
         var url = urlRaiz + '/api/countview';
 
+        // Realiza requisição para registrar a visualização da promoção no BD
         $.ajax({
             url: url,
             dataType: 'json',
@@ -261,6 +262,8 @@ function exibePromo(idPromo, mostraLoad){
                 if(distanciaCalculada <= distObter)
                     conteudo += '<span class="btn btn-square" onclick="location.href=\'obterpromocao.html?' + idPromo +
                         '\'">Eu quero!</span>';
+                else
+                    conteudo += '<p class="mini gray">Aproxime-se do estabelecimento para resgatar a promoção</p><br>';
 
                 $('.container').append(conteudo);
                 $('.headertext .texto').append(dado.empresa.razaosocial);

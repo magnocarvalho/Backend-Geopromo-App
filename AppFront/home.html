@@ -12,16 +12,14 @@
 
 	<title>GeoPromo</title>
 	<script type="text/javascript">
-		window.onload = getAuth(function() {
-		    contaPromos(false);
-		});
-
-		/*
-		* Chama a função a cada 30 segundos.
-		*/
-		setInterval(getAuth(function() {
-            contaPromos(false);
-        }), 300000);
+		window.onload = function() {
+			/*
+			* Chama a função a cada 30 segundos.
+			*/
+			setInterval(getAuth(function() {
+				contaPromos(false);
+			}), 300000);
+        }
 	</script>
 </head>
 <body>
