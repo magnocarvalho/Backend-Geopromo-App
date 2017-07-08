@@ -212,7 +212,7 @@ sup, sub{
  * Bloco um pouco mais afastado do topo, para separar conjuntos de conteúdos
  */
 .bloco-separador {
-	margin-top: 45px;
+	margin-top: 60px;
 }
 
 /**
@@ -224,7 +224,7 @@ sup, sub{
 	z-index: 1;
 	margin-top: 80px;
 	min-height: 60px;
-	max-height: calc(100vh - 110px);
+	/*max-height: calc(100vh - 110px);*/
 	overflow-y: auto;
 }
 
@@ -236,11 +236,15 @@ sup, sub{
     width: 90%;
 }
 
-.titulohistorico {
+.titulo-bloco {
     margin: 0;
     padding: 15px;
-    border-bottom: 1px solid rgb(245,245,245);
+    border-bottom: 1px solid rgb(210,210,210);
 }
+
+    h5.titulo-bloco{
+        padding: 10px;
+    }
 
 
 /**
@@ -265,12 +269,19 @@ sup, sub{
 	h2.tituloPromo{
 		margin: 10px; 
 		margin-bottom: 14px;
-		color: rgb(255, 165, 0);
+		color: rgb(230, 120, 0);
 	}
-		.lista h2.tituloPromo{		
+
+		.lista h2.tituloPromo{
 			display: block;
 			margin-bottom: 5px;
 		}
+
+	h3.tituloPromo {
+		margin: 10px;
+		margin-bottom: 5px;
+		color: rgb(230, 120, 0);
+	}
 
 	p.nomeEmpresa{
 		margin-right: 15px;
@@ -385,7 +396,7 @@ sup, sub{
 * Classes para cores de texto
 */
 .gray{
-	color: rgb(150,150,150);
+	color: rgb(130,130,130);
 }
 .colorred{
 	color: rgb(230, 0, 0);
@@ -558,15 +569,15 @@ sup, sub{
 }*/
 
 
-@media (min-width: 560px){
-	/**
-	* Exibição em duas colunas do resultado dos anúncios próximos para telas maiores
-	* e na horizontal
-	*/
-	.lista, .lista:last-child{
-		width: calc(50% - 30px);
-		margin: 8px;
-		border: 1px solid rgb(235,235,235);
-		border-radius: 3px;
-	}
-}
+/*@media (min-width: 760px){*/
+	/*!***/
+	/** Exibição em duas colunas do resultado dos anúncios próximos para telas maiores*/
+	/** e na horizontal*/
+	/**!*/
+	/*.lista, .lista:last-child{*/
+		/*width: calc(50% - 30px);*/
+		/*margin: 8px;*/
+		/*border: 1px solid rgb(235,235,235);*/
+		/*border-radius: 3px;*/
+	/*}*/
+/*}*/

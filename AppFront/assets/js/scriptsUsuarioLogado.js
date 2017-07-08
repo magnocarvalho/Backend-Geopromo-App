@@ -5,6 +5,7 @@ var raio = 1.5;
 var distObter = 50;
 
 urlRaiz = 'http://localhost/geopromo/ServerBack';
+linkCadeu = 'http://cadeu.tk';
 
 
 // Verifica se o usuário atual está autenticado no sistema
@@ -437,45 +438,6 @@ function exibePromoObtida(idPromo, idCheckin){
 }
 
 
-/**
-* Função que formata um número (inteiro ou com ponto como separador decimal) dado,
-* no padrão 'XXX,ZZ' de dinheiro usado no Brasil e coloca as casas decimais menores
-* e sobrescritas ao valor principal.
-*/
-function moneyFormat( numero ){
-	numero = numero.split('.');
-	if(numero[1]){
-		if(numero[1].length == 1)
-			numero[1] += '0';
-	} else{
-		numero[1] = '00';
-	}
-	return numero[0] + '<sup>,' + numero[1] + '</sup>';
-}
-
-/**
-* Função que obtém os dados passados por GET na página.
-*/
-function obtemGet(){
-	return window.location.search.substring(1).split('&');
-}
-
-
-function logout () {
-    $.ajax({
-        url: urlRaiz + '/api/user/logout',
-        dataType: 'json',
-        success: function(dados){
-            location.href='index.html';
-        },
-        error: function(dados){
-            console.log(dados);
-            alert('Não foi possível desconectar.');
-        }
-    });
-}
-
-
 
 
 /**
@@ -505,7 +467,7 @@ function getHistoricoPromos(mostraLoad){
             $('.loading-image').remove();
 
             // PROMOÇÕES OBTIDAS HOJE:
-            $('#hoje').append('<h3 class="textleft titulohistorico">Hoje</h3>');
+            $('#hoje').append('<h3 class="textleft titulo-bloco">Hoje</h3>');
 
             // Exibe cada promoção obtida "HOJE"
             if($(dados['hoje']).length > 1) { // Caso haja mais de uma
@@ -516,13 +478,15 @@ function getHistoricoPromos(mostraLoad){
 
                     // Busca a promoção com base no checkin para exibir seus dados
                     buscaPromo(dados['hoje'][checkin]['id_promocao'], function (dado, checkin) {
-                        $('#' + checkin['id']).append('<h2 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h2>');
-                        $('#' + checkin['id']).append('<p class="gray nomeEmpresa">' + dado['empresa']['estabelecimento'] +
-                            '</p>');
+                        $('#' + checkin['id']).append('<h3 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h3>' +
+                            '<span class="gray mini nomeEmpresa" style="display:block;margin-bottom:10px">' +
+                            dado['empresa']['estabelecimento'] +
+                            '</span>');
 
                         var arrDataHora = breakDateTime(checkin['datahora']);
-                        $('#' + checkin['id']).append('<b>Horário:</b><br>' +
-                            arrDataHora['hora'] + ':' + arrDataHora['minuto']);
+                        $('#' + checkin['id']).append(
+                            arrDataHora['hora'] + ':' + arrDataHora['minuto']
+                        );
                     }, dados['hoje'][checkin]);
 
                 });
@@ -533,65 +497,71 @@ function getHistoricoPromos(mostraLoad){
 
                     // Busca a promoção com base no checkin para exibir seus dados
                     buscaPromo(dados['hoje'].Checkin.id_promocao, function (dado, checkin) {
-                        $('#' + checkin.id).append('<h2 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h2>');
-                        $('#' + checkin.id).append('<p class="gray nomeEmpresa">' + dado['empresa']['estabelecimento'] +
-                            '</p>');
+                        $('#' + checkin['id']).append('<h3 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h3>' +
+                            '<span class="gray mini nomeEmpresa" style="display:block;margin-bottom:10px">' +
+                            dado['empresa']['estabelecimento'] +
+                            '</span>');
 
                         var arrDataHora = breakDateTime(checkin.datahora);
-                        $('#' + checkin.id).append('<b>Horário:</b><br>' +
-                            arrDataHora['hora'] + ':' + arrDataHora['minuto']);
+                        $('#' + checkin.id).append(
+                            arrDataHora['hora'] + ':' + arrDataHora['minuto']
+                        );
                     }, dados['hoje'].Checkin);
             } else { // Caso não haja nenhuma
-                $('#hoje').append('<p class="textcontent">Nada ainda. Que tal aproveitar umas promoções?</p>');
+                $('#hoje').append('<p class="textcontent gray">Nada ainda. Que tal aproveitar umas promoções?</p>');
             }
 
 
 
             // PROMOÇÕES OBTIDAS ANTES DE HOJE:
-            $('<div class="bloco" id="anteriores" style="max-height: none;"></span></div>')
-                .insertAfter('#hoje');
+            // Exibe cada promoção obtida "ANTERIORMENTE", apenas caso haja ao menos uma
+            if($(dados['anteriores']).length > 0) {
+                $('<div class="bloco" id="anteriores" style="max-height: none; overflow: hidden;"></span></div>')
+                    .insertAfter('#hoje');
 
-            $('#anteriores').append('<h3 class="textleft titulohistorico">Anteriores</h3>');
+                $('#anteriores').append('<h3 class="textleft titulo-bloco">Anteriores</h3>');
 
-            // Exibe cada promoção obtida "ANTERIORMENTE"
-            if($(dados['anteriores']).length > 1) { // Caso haja mais de uma
-                $(dados['anteriores']).each(function (checkin) {
+                if ($(dados['anteriores']).length > 1) { // Caso haja mais de uma
+                    $(dados['anteriores']).each(function (checkin) {
 
+                        $('#anteriores').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
+                            dados['anteriores'][checkin]['id_promocao'] + '&' + dados['anteriores'][checkin]['id'] + '\'" ' +
+                            'id="' + dados['anteriores'][checkin]['id'] + '"></div>');
+
+                        // Busca a promoção com base no checkin para exibir seus dados
+                        buscaPromo(dados['anteriores'][checkin]['id_promocao'], function (dado, checkin) {
+                            $('#' + checkin['id']).append('<h3 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h3>' +
+                                '<span class="gray mini nomeEmpresa" style="display:block;margin-bottom:10px">' +
+                                dado['empresa']['estabelecimento'] +
+                                '</span>');
+
+                            var arrDataHora = breakDateTime(checkin['datahora']);
+                            $('#' + checkin['id']).append(
+                                arrDataHora['dia'] + '/' + arrDataHora['mes'] + '/' + arrDataHora['ano'] + ', às ' +
+                                arrDataHora['hora'] + ':' + arrDataHora['minuto']
+                            );
+                        }, dados['anteriores'][checkin]);
+
+                    });
+                } else if ($(dados['anteriores']).length === 1) { // Caso haja apenas uma
                     $('#anteriores').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
-                        dados['anteriores'][checkin]['id_promocao'] + '&' + dados['anteriores'][checkin]['id'] + '\'" ' +
-                        'id="' + dados['anteriores'][checkin]['id'] + '"></div>');
+                        dados['anteriores'].Checkin.id_promocao + '&' + dados['anteriores'].Checkin.id + '\'" ' +
+                        'id="' + dados['anteriores'].Checkin.id + '"></div>');
 
                     // Busca a promoção com base no checkin para exibir seus dados
-                    buscaPromo(dados['anteriores'][checkin]['id_promocao'], function (dado, checkin) {
-                        $('#' + checkin['id']).append('<h2 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h2>');
-                        $('#' + checkin['id']).append('<p class="gray nomeEmpresa">' + dado['empresa']['estabelecimento'] +
-                            '</p>');
+                    buscaPromo(dados['anteriores'].Checkin.id_promocao, function (dado, checkin) {
+                        $('#' + checkin['id']).append('<h3 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h3>' +
+                            '<span class="gray mini nomeEmpresa" style="display:block;margin-bottom:10px">' +
+                            dado['empresa']['estabelecimento'] +
+                            '</span>');
 
-                        var arrDataHora = breakDateTime(checkin['datahora']);
-                        $('#' + checkin['id']).append('<b>Data:</b><br>' +
+                        var arrDataHora = breakDateTime(checkin.datahora);
+                        $('#' + checkin.id).append(
                             arrDataHora['dia'] + '/' + arrDataHora['mes'] + '/' + arrDataHora['ano'] + ', às ' +
-                            arrDataHora['hora'] + ':' + arrDataHora['minuto']);
-                    }, dados['anteriores'][checkin]);
-
-                });
-            } else if($(dados['anteriores']).length === 1) { // Caso haja apenas uma
-                $('#anteriores').append('<div class="lista clickable" onclick="location.href=\'promocaoresgatada.html?' +
-                    dados['anteriores'].Checkin.id_promocao + '&' + dados['anteriores'].Checkin.id + '\'" ' +
-                    'id="' + dados['anteriores'].Checkin.id + '"></div>');
-
-                // Busca a promoção com base no checkin para exibir seus dados
-                buscaPromo(dados['anteriores'].Checkin.id_promocao, function (dado, checkin) {
-                    $('#' + checkin.id).append('<h2 class="tituloPromo">' + dado['anuncio']['titulo'] + '</h2>');
-                    $('#' + checkin.id).append('<p class="gray nomeEmpresa">' + dado['empresa']['estabelecimento'] +
-                        '</p>');
-
-                    var arrDataHora = breakDateTime(checkin.datahora);
-                    $('#' + checkin.id).append('<b>Data:</b><br>' +
-                        arrDataHora['dia'] + '/' + arrDataHora['mes'] + '/' + arrDataHora['ano'] + ', às ' +
-                        arrDataHora['hora'] + ':' + arrDataHora['minuto']);
-                }, dados['anteriores'].Checkin);
-            } else { // Caso não haja nenhuma
-                $('#anteriores').append('<p class="textcontent">Não há nada em seu histórico de dias anteriores</p>');
+                            arrDataHora['hora'] + ':' + arrDataHora['minuto']
+                        );
+                    }, dados['anteriores'].Checkin);
+                }
             }
         },
         error: function(dados){
@@ -600,6 +570,58 @@ function getHistoricoPromos(mostraLoad){
         }
     });
 }
+
+
+
+// Obtém os dados do usuário logado e exibe na página
+function getDadosUsuario () {
+    $('.loading-image').remove();
+
+    var contUser = '<span class="textcontent">';
+    contUser += '<span class="mini gray">Conectado como</span><br>';
+    contUser += '[EMAIL USUÁRIO]<br><br><br>';
+    contUser += '<b class="mini">Nome:</b>';
+    contUser += '<input type="text" class="input input-full textcenter" id="nomeusuario" ' +
+        'placeholder="Seu nome"><br>';
+    contUser += '<b class="mini">Data de nascimento: </b>';
+    contUser += '<input type="text" class="input input-full textcenter" id="datanascimento" ' +
+        'placeholder="Sua data de nascimento (dd/mm/aaaa)" pattern="[0-9]{2,2}\/[0-9]{2,2}\/[0-9]{4,4}"><br>';
+    contUser += '<span class="btn btn-square" id="btnContinuar" onclick="">' +
+        'Atualizar dados</span>';
+    contUser += '</span>';
+    $('.container').append(contUser);
+
+
+    $('body').append('<div class="bloco" id="alterarsenha"></div>');
+
+    var contAltSenha = '<h4 class="titulo-bloco textleft">Alterar senha</h4><span class="textcontent">';
+    contAltSenha += '<input type="password" class="input input-full textcenter" id="senhaatual" ' +
+        'placeholder="Senha atual"><br>';
+    contAltSenha += '<input type="password" class="input input-full textcenter" id="novasenha" ' +
+        'placeholder="Nova senha"><br>';
+    contAltSenha += '<input type="password" class="input input-full textcenter" id="confirmacao" ' +
+        'placeholder="Repita a nova senha"><br>';
+    contAltSenha += '<span class="btn btn-square" id="btnContinuar" onclick="cadastroInfo($(\'#nomeusuario\').val(), ' +
+        '$(\'#datanascimento\').val())">' +
+        'Confirmar</span></span>';
+    $('#alterarsenha').append(contAltSenha);
+
+
+    $('body').append('<div class="bloco clickable" id="cadeu" onclick="window.open(\''+linkCadeu+'\',\'_blank\');"></div>');
+    var contCad = '<h5 class="titulo-bloco textleft">Divulgação</h5>';
+    contCad += '<span class="textcontent">';
+    contCad += '<b>Organize suas contas online</b><br>Conheça o Cadêu<br><br>' +
+        '<span class="mini gray">Toque aqui para acessar</span></span ';
+    $('#cadeu').append(contCad);
+
+
+    $('body').append('<div class="bloco bloco-separador" id="logout"></div>');
+    $('#logout').append('<div class="lista clickable" onclick="logout()">' +
+        '<span class="textcontent" style="margin-top: 30px">Toque aqui para se desconectar</span>' +
+        '</div>');
+}
+
+
 
 
 // Função que quebra uma datetime/timestamp e retorna um vetor com cada valor da data
@@ -622,4 +644,43 @@ function breakDate (date) {
     var dia = date.substr(8, 2);
 
     return {ano:ano, mes:mes, dia:dia}
+}
+
+
+/**
+ * Função que formata um número (inteiro ou com ponto como separador decimal) dado,
+ * no padrão 'XXX,ZZ' de dinheiro usado no Brasil e coloca as casas decimais menores
+ * e sobrescritas ao valor principal.
+ */
+function moneyFormat( numero ){
+    numero = numero.split('.');
+    if(numero[1]){
+        if(numero[1].length == 1)
+            numero[1] += '0';
+    } else{
+        numero[1] = '00';
+    }
+    return numero[0] + '<sup>,' + numero[1] + '</sup>';
+}
+
+/**
+ * Função que obtém os dados passados por GET na página.
+ */
+function obtemGet(){
+    return window.location.search.substring(1).split('&');
+}
+
+// Função que realiza o logout do usuário
+function logout () {
+    $.ajax({
+        url: urlRaiz + '/api/user/logout',
+        dataType: 'json',
+        success: function(dados){
+            location.href='index.html';
+        },
+        error: function(dados){
+            console.log(dados);
+            alert('Não foi possível desconectar.');
+        }
+    });
 }
