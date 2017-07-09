@@ -20,6 +20,29 @@
     </script>
 </head>
 <body>
+        <script>
+                window.fbAsyncInit = function() {
+                  FB.init({
+                    appId      : '1728558777419207',
+                    xfbml      : true,
+                    version    : 'v2.9'
+                  });
+                  FB.AppEvents.logPageView();
+                };
+
+                (function(d, s, id){
+                   var js, fjs = d.getElementsByTagName(s)[0];
+                   if (d.getElementById(id)) {return;}
+                   js = d.createElement(s); js.id = id;
+                   js.src = "//connect.facebook.net/en_US/sdk.js";
+                   fjs.parentNode.insertBefore(js, fjs);
+                 }(document, 'script', 'facebook-jssdk'));
+                 
+                 FB.getLoginStatus(function(response) {
+                        statusChangeCallback(response);
+                 });
+                 /* chama o sdk do facebook e verifica se o cliente ja conectou ao sistema antes.*/
+        </script> 
 	<div id="colorheader"></div>
 	<div id="header">
 		<div id="header-content">
@@ -28,11 +51,27 @@
 			</span>
 		</div>
 	</div>
-
-	<div class="container bloco">
+        
+        <div class="container bloco">
 		<span class="loading-image"></span>
+                
 	</div>
-
+        <div id="fb-root"></div>
+                <script>(function(d, s, id) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  if (d.getElementById(id)) return;
+                  js = d.createElement(s); js.id = id;
+                  js.src = "//connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v2.9&appId=1728558777419207";
+                  fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+                
+        <fb:login-button 
+                scope="public_profile,email"
+                onlogin="checkLoginState();">
+        </fb:login-button>
+                </script>
+                <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true"></div>
+	
     <script>
         $(document).keypress(function(e){
             if(e.keyCode == 13)
