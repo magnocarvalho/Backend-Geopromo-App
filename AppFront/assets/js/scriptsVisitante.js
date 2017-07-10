@@ -38,6 +38,11 @@ function showLogin1Content (isLogged) {
         conteudo += '<span class="btn btn-square" id="btnContinuar" onclick="loginEmail($(\'#emailLogin\').val())">' +
             'Continuar</span>';
 
+        conteudo += '<br><p>Ou então</p>';
+        conteudo += '<div class="fb-login-button" data-max-rows="1" data-size="medium" ' +
+            'data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" ' +
+            'data-use-continue-as="true"></div><br><br>';
+
         $('.textcontent').append(conteudo);
     }
 }
