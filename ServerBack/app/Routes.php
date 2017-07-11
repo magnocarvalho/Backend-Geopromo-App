@@ -32,5 +32,7 @@ $route['api/user/history/promocoes'] = 'ApiUsuariosController/historicoPromos';
 $route['api/user/getinfo'] = 'ApiUsuariosController/getInfoLoggedUser';
 $route['api/user/updateinfo'] = 'ApiUsuariosController/updateLoggedUser';
 $route['api/user/updatepassword'] = 'ApiUsuariosController/updateLoggedPassword';
+// Relações com o Facebook
+$route['api/user/fblogin'] = 'ApiUsuariosController/logout';
 // Logout
 $route['api/user/logout'] = 'ApiUsuariosController/logout';

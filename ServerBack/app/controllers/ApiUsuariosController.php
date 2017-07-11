@@ -167,4 +167,46 @@ class ApiUsuariosController extends Controller {
             echo jsonSerialize(false);
         }
     }
+
+
+
+    // LOGIN COM FACEBOOK
+    public function fbLogin () {
+        // Buscar no DB antes pelo provider e pelo uid (oauth_[...]) para definir o que fazer
+        // Obter os dados, adicionar a um objeto Cliente ($cliente) e salvar no banco caso não exista
+        // Por fim, iniciar sessão (Auth::createAuthSession($cliente);)
+
+        $userData = json_decode($_POST['userData']);
+
+        if(!empty($userData)){
+            $provider = $_POST['provider'];
+
+            $cliente = (new Cliente())->where(
+                'oauth_provider = ? AND oauth_uid = ?',
+                [$provider, $userData->id]
+            )->find();
+
+
+            if(count($cliente) == 0) {
+                // Insere o usuário no banco com os dados vindos do FB
+                $cliente = new Cliente();
+                $cliente->setEmail($userData->email);
+                $cliente->setNome($userData->first_name.' '.$userData->last_name);
+                $cliente->setOauthProvider('Facebook');
+                $cliente->setOauthUid($userData->id);
+                $cliente->save();
+            } else {
+                // Atualiza alguns dados no banco com os dados vindos do FB
+                $cliente = $cliente[0];
+                $cliente->setEmail($userData->email);
+                $cliente->setNome($userData->first_name.' '.$userData->last_name);
+                $cliente->save();
+            }
+
+            Auth::createAuthSession($cliente);
+
+            echo jsonSerialize(true);
+
+        }
+    }
 }

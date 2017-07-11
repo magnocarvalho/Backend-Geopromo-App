@@ -7,6 +7,8 @@ class Cliente extends Model {
     private $foto;
     private $email;
     private $senha;
+    private $oauth_provider;
+    private $oauth_uid;
 
 
     public function getId()
@@ -67,6 +69,26 @@ class Cliente extends Model {
     public function setSenha($senha)
     {
         $this->senha = $senha;
+    }
+
+    public function getOauthProvider()
+    {
+        return $this->oauth_provider;
+    }
+
+    public function setOauthProvider($oauth_provider)
+    {
+        $this->oauth_provider = $oauth_provider;
+    }
+
+    public function getOauthUid()
+    {
+        return $this->oauth_uid;
+    }
+
+    public function setOauthUid($oauth_uid)
+    {
+        $this->oauth_uid = $oauth_uid;
     }
 
 
