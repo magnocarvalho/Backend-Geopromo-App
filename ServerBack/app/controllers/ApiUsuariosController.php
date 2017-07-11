@@ -140,7 +140,7 @@ class ApiUsuariosController extends Controller {
 
         $cliente = Auth::getLoggedUser();
         $cliente->setNome($_POST['nome']);
-        $cliente->setNascimento($dataNasc);
+        $cliente->setNascimento(date('Y-m-d', strtotime($dataNasc)));
         $cliente->save();
 
         Auth::createAuthSession($cliente);
@@ -150,7 +150,21 @@ class ApiUsuariosController extends Controller {
 
     // Atualiza a senha do usuário logado
     public function updateLoggedPassword () {
-        echo 'bye';
-        // Fazer o logout
+        $cliente = Auth::getLoggedUser();
+
+        if($_POST['novasenha'] == $_POST['confirmacao'] && $_POST['novasenha'] != $_POST['senhaatual']) {
+            if (Auth::bindAuth(['email' => $cliente->getEmail(), 'senha' => $_POST['senhaatual']], 'cliente')) {
+                $cliente->setSenha(Auth::hashPassword($_POST['novasenha']));
+                $cliente->save();
+
+                Auth::createAuthSession($cliente);
+                echo jsonSerialize(true);
+
+            } else {
+                echo jsonSerialize(-1);
+            }
+        } else {
+            echo jsonSerialize(false);
+        }
     }
 }

@@ -644,6 +644,7 @@ function updateUserInfo () {
 
     $('.container .alert').remove();
 
+    // Validação dos campos
     if(nome === '' || nascimento === '' || !regexNasc.test(nascimento)) {
         if (nome === '' || nascimento === '') {
             $('<div class="alert alert-erro">Todos os campos devem estar preenchidos</div>').insertBefore('#btnUpdate');
@@ -657,6 +658,7 @@ function updateUserInfo () {
             }
         }
     } else {
+        // Execução da consulta para atualizar os dados
         $('body').append('<span class="loading-image load-bottom"></span>');
         $.ajax({
             url: urlRaiz + '/api/user/updateinfo',
@@ -665,12 +667,12 @@ function updateUserInfo () {
             data: {'nome':nome, 'nascimento':nascimento},
             success: function (data) {
                 $('.load-bottom').remove();
-                $('.alert').remove();
+                $('.container .alert').remove();
                 $('<div class="alert alert-sucesso">Seus dados foram atualizados</div>').insertBefore('#btnUpdate');
             },
             error: function (data) {
                 $('.load-bottom').remove();
-                $('.alert').remove();
+                $('.container .alert').remove();
                 console.log(data);
                 alert('Não foi possível atualizar seus dados');
             }
@@ -681,8 +683,63 @@ function updateUserInfo () {
 
 // Envia os dados para atualizar a senha do usuário no banco
 function updateUserPassword () {
+    var oldPass = $('#senhaatual').val();
+    var newPass = $('#novasenha').val();
+    var confirm = $('#confirmacao').val();
+
+    $('#alterarsenha .alert').remove();
+
     // Validar se nenhum campos está em branco e tudo mais
-    alert('update pass');
+    if (oldPass === '' || newPass === '' || confirm === '' || newPass !== confirm || newPass === oldPass){
+        if (oldPass === '' || newPass === '' || confirm === '') {
+            $('<div class="alert alert-erro">Todos os campos devem estar preenchidos</div>')
+                .insertBefore('#btnChangePass');
+        }
+        if (newPass === oldPass) { // Caso a nova senha e senha atual sejam iguais
+            if($('#alterarsenha .alert-erro').length === 0) {
+                $('<span class="alert alert-erro">A nova senha não pode ser igual à senha atual</span>')
+                    .insertBefore('#btnChangePass');
+            } else {
+                $('#alterarsenha .alert-erro').append('<br><br>A nova senha não pode ser igual à senha atual');
+            }
+        }
+        if (newPass !== confirm) { // Caso a nova senha e a confirmação difiram entre si
+            if($('#alterarsenha .alert-erro').length === 0) {
+                $('<span class="alert alert-erro">A confirmação deve ser igual à nova senha</span>')
+                    .insertBefore('#btnChangePass');
+            } else {
+                $('#alterarsenha .alert-erro').append('<br><br>A confirmação deve ser igual à nova senha');
+            }
+        }
+    } else {
+        // Execução da consulta para atualizar os dados
+        $('body').append('<span class="loading-image load-bottom"></span>');
+        $.ajax({
+            url: urlRaiz + '/api/user/updatepassword',
+            dataType: 'json',
+            method: 'post',
+            data: {'senhaatual':oldPass, 'novasenha':newPass, 'confirmacao':confirm},
+            success: function (data) {
+                $('.load-bottom').remove();
+                $('#alterarsenha .alert').remove();
+                if (data === true)
+                    $('<div class="alert alert-sucesso">Sua senha foi alterada. Ao se conectar novamente, utilize a ' +
+                        'nova senha</div>').insertBefore('#btnChangePass');
+                else if (data === false)
+                    $('<div class="alert alert-erro">Não foi possível atualizar sua senha</div>')
+                        .insertBefore('#btnChangePass');
+                else if (data === -1)
+                    $('<div class="alert alert-erro">A senha atual está incorreta</div>')
+                        .insertBefore('#btnChangePass');
+            },
+            error: function (data) {
+                $('.load-bottom').remove();
+                $('.alert').remove();
+                console.log(data);
+                alert('Não foi possível atualizar seus dados');
+            }
+        });
+    }
 }
 
 
