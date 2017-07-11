@@ -575,50 +575,114 @@ function getHistoricoPromos(mostraLoad){
 
 // Obtém os dados do usuário logado e exibe na página
 function getDadosUsuario () {
-    $('.loading-image').remove();
+    $.ajax({
+        url: urlRaiz + '/api/user/getinfo',
+        dataType: 'json',
+        success: function (data) {
 
-    var contUser = '<span class="textcontent">';
-    contUser += '<span class="mini gray">Conectado como</span><br>';
-    contUser += '[EMAIL USUÁRIO]<br><br><br>';
-    contUser += '<b class="mini">Nome:</b>';
-    contUser += '<input type="text" class="input input-full textcenter" id="nomeusuario" ' +
-        'placeholder="Seu nome"><br>';
-    contUser += '<b class="mini">Data de nascimento: </b>';
-    contUser += '<input type="text" class="input input-full textcenter" id="datanascimento" ' +
-        'placeholder="Sua data de nascimento (dd/mm/aaaa)" pattern="[0-9]{2,2}\/[0-9]{2,2}\/[0-9]{4,4}"><br>';
-    contUser += '<span class="btn btn-square" id="btnContinuar" onclick="">' +
-        'Atualizar dados</span>';
-    contUser += '</span>';
-    $('.container').append(contUser);
+            var dataNasc = breakDate(data.Cliente.nascimento);
 
+            $('.loading-image').remove();
 
-    $('body').append('<div class="bloco" id="alterarsenha"></div>');
-
-    var contAltSenha = '<h4 class="titulo-bloco textleft">Alterar senha</h4><span class="textcontent">';
-    contAltSenha += '<input type="password" class="input input-full textcenter" id="senhaatual" ' +
-        'placeholder="Senha atual"><br>';
-    contAltSenha += '<input type="password" class="input input-full textcenter" id="novasenha" ' +
-        'placeholder="Nova senha"><br>';
-    contAltSenha += '<input type="password" class="input input-full textcenter" id="confirmacao" ' +
-        'placeholder="Repita a nova senha"><br>';
-    contAltSenha += '<span class="btn btn-square" id="btnContinuar" onclick="cadastroInfo($(\'#nomeusuario\').val(), ' +
-        '$(\'#datanascimento\').val())">' +
-        'Confirmar</span></span>';
-    $('#alterarsenha').append(contAltSenha);
+            var contUser = '<span class="textcontent">';
+            contUser += '<span class="mini gray">Conectado como</span><br>';
+            contUser += data.Cliente.email + '<br><br><br>';
+            contUser += '<b class="mini">Nome:</b>';
+            contUser += '<input type="text" class="input input-full textcenter" id="nomeusuario" ' +
+                'placeholder="Seu nome" value="' + data.Cliente.nome + '"><br>';
+            contUser += '<b class="mini">Data de nascimento: </b>';
+            contUser += '<input type="text" class="input input-full textcenter" id="datanascimento" ' +
+                'placeholder="Sua data de nascimento (dd/mm/aaaa)" pattern="[0-9]{2,2}\/[0-9]{2,2}\/[0-9]{4,4}"' +
+                'value="' + dataNasc['dia']+'/'+dataNasc['mes']+'/'+dataNasc['ano'] + '"><br>';
+            contUser += '<span class="btn btn-square" id="btnUpdate" onclick="updateUserInfo()">' +
+                'Atualizar dados</span>';
+            contUser += '</span>';
+            $('.container').append(contUser);
 
 
-    $('body').append('<div class="bloco clickable" id="cadeu" onclick="window.open(\''+linkCadeu+'\',\'_blank\');"></div>');
-    var contCad = '<h5 class="titulo-bloco textleft">Divulgação</h5>';
-    contCad += '<span class="textcontent">';
-    contCad += '<b>Organize suas contas online</b><br>Conheça o Cadêu<br><br>' +
-        '<span class="mini gray">Toque aqui para acessar</span></span ';
-    $('#cadeu').append(contCad);
+            $('body').append('<div class="bloco" id="alterarsenha"></div>');
+
+            var contAltSenha = '<h4 class="titulo-bloco textleft">Alterar senha</h4><span class="textcontent">';
+            contAltSenha += '<input type="password" class="input input-full textcenter" id="senhaatual" ' +
+                'placeholder="Senha atual"><br>';
+            contAltSenha += '<input type="password" class="input input-full textcenter" id="novasenha" ' +
+                'placeholder="Nova senha"><br>';
+            contAltSenha += '<input type="password" class="input input-full textcenter" id="confirmacao" ' +
+                'placeholder="Repita a nova senha"><br>';
+            contAltSenha += '<span class="btn btn-square" id="btnChangePass" onclick="updateUserPassword()">' +
+                'Confirmar</span></span>';
+            $('#alterarsenha').append(contAltSenha);
 
 
-    $('body').append('<div class="bloco bloco-separador" id="logout"></div>');
-    $('#logout').append('<div class="lista clickable" onclick="logout()">' +
-        '<span class="textcontent" style="margin-top: 30px">Toque aqui para se desconectar</span>' +
-        '</div>');
+            $('body').append('<div class="bloco clickable" id="cadeu" onclick="window.open(\''+linkCadeu +
+                '\',\'_blank\');"></div>');
+            var contCad = '<h5 class="titulo-bloco textleft">Divulgação</h5>';
+            contCad += '<span class="textcontent">';
+            contCad += '<b>Organize suas contas online</b><br>Conheça o Cadêu<br><br>' +
+                '<span class="mini gray">Toque aqui para acessar</span></span ';
+            $('#cadeu').append(contCad);
+
+
+            $('body').append('<div class="bloco bloco-separador" id="logout"></div>');
+            $('#logout').append('<div class="lista clickable" onclick="logout()">' +
+                '<span class="textcontent" style="margin-top: 30px">Toque aqui para se desconectar</span>' +
+                '</div>');
+        },
+        error: function (data) {
+            console.log(data);
+            alert('Houve um problema');
+        }
+    });
+}
+
+
+// Envia os dados para atualizar os dados do usuário no banco
+function updateUserInfo () {
+    var nome = $('#nomeusuario').val();
+    var nascimento = $('#datanascimento').val();
+    var regexNasc = new RegExp('^[0-9]{2,2}\/[0-9]{2,2}\/[0-9]{4,4}$');
+
+    $('.container .alert').remove();
+
+    if(nome === '' || nascimento === '' || !regexNasc.test(nascimento)) {
+        if (nome === '' || nascimento === '') {
+            $('<div class="alert alert-erro">Todos os campos devem estar preenchidos</div>').insertBefore('#btnUpdate');
+        }
+        if (!regexNasc.test(nascimento)) {
+            if($('.container .alert-erro').length === 0) {
+                $('<span class="alert alert-erro">Informe sua data de nascimento no padrão dd/mm/aaaa</span>')
+                    .insertBefore('#btnUpdate');
+            } else {
+                $('.container .alert-erro').append('<br><br>Informe sua data de nascimento no padrão dd/mm/aaaa');
+            }
+        }
+    } else {
+        $('body').append('<span class="loading-image load-bottom"></span>');
+        $.ajax({
+            url: urlRaiz + '/api/user/updateinfo',
+            dataType: 'json',
+            method: 'post',
+            data: {'nome':nome, 'nascimento':nascimento},
+            success: function (data) {
+                $('.load-bottom').remove();
+                $('.alert').remove();
+                $('<div class="alert alert-sucesso">Seus dados foram atualizados</div>').insertBefore('#btnUpdate');
+            },
+            error: function (data) {
+                $('.load-bottom').remove();
+                $('.alert').remove();
+                console.log(data);
+                alert('Não foi possível atualizar seus dados');
+            }
+        });
+    }
+}
+
+
+// Envia os dados para atualizar a senha do usuário no banco
+function updateUserPassword () {
+    // Validar se nenhum campos está em branco e tudo mais
+    alert('update pass');
 }
 
 

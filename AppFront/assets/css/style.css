@@ -459,6 +459,11 @@ sup, sub{
 		color: rgb(190,0,0);
 	}
 
+    .alert-sucesso{
+		background-color: rgb(240,255,240);
+		color: rgb(15,130,30);
+	}
+
     .alert-info{
 		background-color: rgb(240,240,255);
 		color: rgb(15,30,130);

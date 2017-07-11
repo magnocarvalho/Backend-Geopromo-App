@@ -259,7 +259,7 @@ function cadastroInfo(nome, nasc) {
         }
         if (nasc == '' || !regexNasc.test(nasc)) {
             $('.load-bottom').remove();
-            $('<span class="alert alert-erro">Informa sua data de nascimento (no padrão dd/mm/aaa)</span>')
+            $('<span class="alert alert-erro">Informe sua data de nascimento (no padrão dd/mm/aaaa)</span>')
                 .insertAfter('#datanascimento');
         }
     }else {

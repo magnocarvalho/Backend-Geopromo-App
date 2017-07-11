@@ -121,4 +121,36 @@ class ApiUsuariosController extends Controller {
 
         echo jsonSerialize($checkins);
     }
+
+    // Retorna os dados do usuário logado, usado na página "minha conta"
+    public function getInfoLoggedUser () {
+        $cliente = Auth::getLoggedUser();
+        $cliente->setSenha("");
+
+        echo jsonSerialize($cliente);
+    }
+
+    // Atualiza os dados do usuário logado
+    public function updateLoggedUser () {
+        // Obtém a data de nascimento informada e a formata para o padrão do BD
+        $arrData = explode('/', $_POST['nascimento']);
+        $arrData = [$arrData[2], $arrData[1], $arrData[0]];
+        $dataNasc = implode('-', $arrData);
+
+
+        $cliente = Auth::getLoggedUser();
+        $cliente->setNome($_POST['nome']);
+        $cliente->setNascimento($dataNasc);
+        $cliente->save();
+
+        Auth::createAuthSession($cliente);
+
+        echo jsonSerialize(true);
+    }
+
+    // Atualiza a senha do usuário logado
+    public function updateLoggedPassword () {
+        echo 'bye';
+        // Fazer o logout
+    }
 }
