@@ -41,7 +41,7 @@ function showLogin1Content (isLogged) {
         conteudo += '<br><p>Ou então</p>';
         conteudo += '<div class="fb-login-button" data-max-rows="1" data-size="medium" ' +
             'data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" ' +
-            'data-use-continue-as="true" data-width="200"></div><br><br>';
+            'data-use-continue-as="false" data-width="200"></div><br><br>';
 
         $('.textcontent').append(conteudo);
     }

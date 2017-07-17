@@ -26,7 +26,7 @@ window.fbAsyncInit = function() {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
     js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
+    js.src = "//connect.facebook.net/pt_BR/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
@@ -43,7 +43,7 @@ function fbLogin() {
 }
 
 function getFbUserData(){
-    FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
+    FB.api('/me', {locale: 'pt_BR', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
     function (response) {
         // Save user data
         saveFBUserData(response);
