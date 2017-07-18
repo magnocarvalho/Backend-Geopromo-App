@@ -31,7 +31,8 @@ function showLogin1Content (isLogged) {
         location.href='home.html';
 
     } else {
-        var fbcont = '<script src="assets/js/fbAuth.js"></script><div id="fb-root"></div>';
+        $('#fbArea').remove();
+        var fbcont = '<div id="fbArea"><script src="assets/js/fbAuth.js"></script><div id="fb-root"></div></div>';
         $(fbcont).insertBefore('#colorheader');
 
 

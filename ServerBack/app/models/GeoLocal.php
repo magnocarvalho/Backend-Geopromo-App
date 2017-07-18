@@ -17,7 +17,7 @@ class GeoLocal extends Model {
 
             if($dist <= (float) $raio){
                 $promocoes = (new Promocao())->where(
-                    'id_vendedor = ? AND inicio <= ? AND fim >= ? AND ativo = true',
+                    'id_vendedor = ? AND inicio <= ? AND (fim >= ? OR fim IS NULL) AND ativo = true',
                     [$empresa->getId(), date('Y-m-d'), date('Y-m-d')]
                 )->find();
 
