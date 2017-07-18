@@ -191,17 +191,20 @@ class ApiUsuariosController extends Controller {
                 if (count($cliente) == 0) {
                     // Insere o usuário no banco com os dados vindos do FB
                     $cliente = new Cliente();
-                    $cliente->setEmail($userData->email);
+                    @$cliente->setEmail($userData->email);
                     $cliente->setNome($userData->first_name . ' ' . $userData->last_name);
-                    $cliente->setNascimento(date('Y-m-d', strtotime($userData->birthday)));
+                    @$cliente->setNascimento(date('Y-m-d', strtotime($userData->birthday)));
                     $cliente->setOauthProvider('Facebook');
                     $cliente->setOauthUid($userData->id);
                     $cliente->save();
                 } else {
                     // Atualiza alguns dados no banco com os dados vindos do FB
+
+                    // "@" indica opcional. Pode ser que estes dados não venham, e aí ele não gera erros e não
+                    // executa tais linhas
                     $cliente = $cliente[0];
-                    $cliente->setEmail($userData->email);
-                    $cliente->setNascimento(date('Y-m-d', strtotime($userData->birthday)));
+                    @$cliente->setEmail($userData->email);
+                    @$cliente->setNascimento(date('Y-m-d', strtotime($userData->birthday)));
                     $cliente->setNome($userData->first_name . ' ' . $userData->last_name);
                     $cliente->save();
                 }
