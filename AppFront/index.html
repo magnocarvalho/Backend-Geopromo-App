@@ -9,10 +9,12 @@
 	<link rel="shortcut icon" type="image/png" href="assets/images/logo.png">
 	<script type="text/javascript" src="assets/js/jquery-3.1.0.js"></script>
 	<script type="text/javascript" src="assets/js/scriptsVisitante.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     
         <title>GeoPromo</title>
     <script type="text/javascript">
+		// Define, futuramente, a ação a ser tomada pelo login do FB
+        var action = 'login';
+
          window.onload = getAuth();
         /*
          * Chama a função a cada 30 segundos.
@@ -21,17 +23,6 @@
     </script>
 </head>
 <body>
-
-    <script src="assets/js/fbAuth.js"></script>
-    <div id="fb-root"></div>
-    <script>
- 
-        <FB:login-button
-            scope="public_profile,email"
-            onlogin="checkLoginState();"></FB:login-button>
-    </script>
-
-
 	<div id="colorheader"></div>
 	<div id="header">
 		<div id="header-content">

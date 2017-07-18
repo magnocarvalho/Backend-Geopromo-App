@@ -179,34 +179,40 @@ class ApiUsuariosController extends Controller {
         $userData = json_decode($_POST['userData']);
 
         if(!empty($userData)){
-            $provider = $_POST['provider'];
+            if(isset($userData->id) && $userData->id != '') {
+                $provider = $_POST['provider'];
 
-            $cliente = (new Cliente())->where(
-                'oauth_provider = ? AND oauth_uid = ?',
-                [$provider, $userData->id]
-            )->find();
+                $cliente = (new Cliente())->where(
+                    'oauth_provider = ? AND oauth_uid = ?',
+                    [$provider, $userData->id]
+                )->find();
 
 
-            if(count($cliente) == 0) {
-                // Insere o usuário no banco com os dados vindos do FB
-                $cliente = new Cliente();
-                $cliente->setEmail($userData->email);
-                $cliente->setNome($userData->first_name.' '.$userData->last_name);
-                $cliente->setOauthProvider('Facebook');
-                $cliente->setOauthUid($userData->id);
-                $cliente->save();
+                if (count($cliente) == 0) {
+                    // Insere o usuário no banco com os dados vindos do FB
+                    $cliente = new Cliente();
+                    $cliente->setEmail($userData->email);
+                    $cliente->setNome($userData->first_name . ' ' . $userData->last_name);
+                    $cliente->setNascimento(date('Y-m-d', strtotime($userData->birthday)));
+                    $cliente->setOauthProvider('Facebook');
+                    $cliente->setOauthUid($userData->id);
+                    $cliente->save();
+                } else {
+                    // Atualiza alguns dados no banco com os dados vindos do FB
+                    $cliente = $cliente[0];
+                    $cliente->setEmail($userData->email);
+                    $cliente->setNascimento(date('Y-m-d', strtotime($userData->birthday)));
+                    $cliente->setNome($userData->first_name . ' ' . $userData->last_name);
+                    $cliente->save();
+                }
+
+                Auth::createAuthSession($cliente);
+
+                echo jsonSerialize(true);
+
             } else {
-                // Atualiza alguns dados no banco com os dados vindos do FB
-                $cliente = $cliente[0];
-                $cliente->setEmail($userData->email);
-                $cliente->setNome($userData->first_name.' '.$userData->last_name);
-                $cliente->save();
+                echo jsonSerialize(false);
             }
-
-            Auth::createAuthSession($cliente);
-
-            echo jsonSerialize(true);
-
         }
     }
 }
