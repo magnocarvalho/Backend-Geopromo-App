@@ -4,63 +4,75 @@
 
 urlRaiz = 'http://localhost/geopromo/ServerBack';
 
-window.fbAsyncInit = function() {
-    // FB JavaScript SDK configuration and setup
+window.fbAsyncInit = function () {
+    // Configuração do SDK JavaScript do FB
     FB.init({
-        appId      : '1728558777419207', // FB App ID
-        cookie     : true,  // enable cookies to allow the server to access the session
-        xfbml      : true,  // parse social plugins on this page
-        version    : 'v2.9' // use graph api version 2.9
+        // appId: '1728558777419207', // FB App ID
+        appId      : '348574885553283', // Test app ID
+        cookie: true,  // enable cookies to allow the server to access the session
+        xfbml: true,  // parse social plugins on this page
+        version: 'v2.9' // use graph api version 2.9
     });
 
-    // Check whether the user already logged in
-    FB.getLoginStatus(function(response) {
+    // Verifica se o usuário está conectado ao FB. Caso esteja, realiza as ações definidas
+    FB.getLoginStatus(function (response) {
         if (response.status === 'connected') {
-            //display user data
-            getFbUserData();
+            /**
+             * Variável "action" é definida globalmente nos arquivos que incluem este (index.html e minhaconta.html)
+             */
+
+            // Caso defina que está em logout, finaliza a sessão do FB depois de finalizada a sessão local
+            // (quando este arquivo é chamado)
+            if(action === 'logout') {
+                // Mostra um indicador de carregamento
+                $('body').append('<span class="loading-image load-bottom"></span>');
+
+                FB.logout(function () {
+                    location.href = 'index.html';
+                });
+            }
+
+        } else { // Caso não esteja conectado ao FB, simplesmente redireciona
+
+            // Caso defina que está em logout, finaliza a sessão do FB depois de finalizada a sessão local
+            // (quando este arquivo é chamado)
+            if(action === 'logout') {
+                location.href = 'index.html';
+            }
         }
     });
 };
-// Load the JavaScript SDK asynchronously
-(function(d, s, id) {
+
+// Carrega o SDK do FB assicronamente
+(function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/pt_BR/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
-// Facebook login with JavaScript SDK
-function fbLogin() {
-    FB.login(function (response) {
-        if (response.authResponse) {
-            // Get and display the user profile data
-            getFbUserData();
-        } else {
-            document.getElementById('status').innerHTML = 'User cancelled login or did not fully authorize.';
-        }
-    }, {scope: 'email'});
-}
 
-function getFbUserData(){
-    FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
-    function (response) {
-        // Save user data
-        saveFBUserData(response);
-    });
+function getFbUserData() {
+    FB.api('/me', {locale: 'pt_BR', fields: 'id, first_name, last_name, email, birthday, gender, locale, picture'},
+        function (response) {
+            // Save user data
+            saveFBUserData(response);
+        });
 }
 
 // Salva os dados no BD
-function saveFBUserData (data) {
+function saveFBUserData(data) {
     $.ajax({
         url: urlRaiz + '/api/user/fblogin',
         dataType: 'json',
         data: {provider: 'facebook', userData: JSON.stringify(data)},
         method: 'post',
         success: function (data) {
-            console.log(data);
-            if(data === true)
-                location.href='home.html';
+            // Após a criação da sessão no lado do servidor, realiza o redirecionamento à página do usuário
+            if (data === true)
+                location.href = 'home.html';
         },
         error: function (data) {
             console.log(data);

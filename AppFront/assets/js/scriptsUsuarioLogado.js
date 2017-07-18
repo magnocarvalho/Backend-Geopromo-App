@@ -101,7 +101,6 @@ function contaPromos(mostraLoad){
 	}
 
 	getDados(function(tamanho){
-		console.log(tamanho);
 		$('.loading-image').remove();
 		$('#cont').removeAttr('style');
 
@@ -463,7 +462,6 @@ function getHistoricoPromos(mostraLoad){
         url: urlRaiz + '/api/user/history/promocoes',
         dataType: 'json',
         success: function(dados){
-            console.log(dados);
             $('.loading-image').remove();
 
             // PROMOÇÕES OBTIDAS HOJE:
@@ -579,39 +577,44 @@ function getDadosUsuario () {
         url: urlRaiz + '/api/user/getinfo',
         dataType: 'json',
         success: function (data) {
-
-            var dataNasc = breakDate(data.Cliente.nascimento);
-
             $('.loading-image').remove();
 
-            var contUser = '<span class="textcontent">';
-            contUser += '<span class="mini gray">Conectado como</span><br>';
-            contUser += data.Cliente.email + '<br><br><br>';
-            contUser += '<b class="mini">Nome:</b>';
-            contUser += '<input type="text" class="input input-full textcenter" id="nomeusuario" ' +
-                'placeholder="Seu nome" value="' + data.Cliente.nome + '"><br>';
-            contUser += '<b class="mini">Data de nascimento: </b>';
-            contUser += '<input type="text" class="input input-full textcenter" id="datanascimento" ' +
-                'placeholder="Sua data de nascimento (dd/mm/aaaa)" pattern="[0-9]{2,2}\/[0-9]{2,2}\/[0-9]{4,4}"' +
-                'value="' + dataNasc['dia']+'/'+dataNasc['mes']+'/'+dataNasc['ano'] + '"><br>';
-            contUser += '<span class="btn btn-square" id="btnUpdate" onclick="updateUserInfo()">' +
-                'Atualizar dados</span>';
-            contUser += '</span>';
-            $('.container').append(contUser);
+            if(data.Cliente.oauth_uid === '') {
+                var dataNasc = breakDate(data.Cliente.nascimento);
 
 
-            $('body').append('<div class="bloco" id="alterarsenha"></div>');
+                var contUser = '<span class="textcontent">';
+                contUser += '<span class="mini gray">Conectado como</span><br>';
+                contUser += data.Cliente.email + '<br><br><br>';
+                contUser += '<b class="mini">Nome:</b>';
+                contUser += '<input type="text" class="input input-full textcenter" id="nomeusuario" ' +
+                    'placeholder="Seu nome" value="' + data.Cliente.nome + '"><br>';
+                contUser += '<b class="mini">Data de nascimento: </b>';
+                contUser += '<input type="text" class="input input-full textcenter" id="datanascimento" ' +
+                    'placeholder="Sua data de nascimento (dd/mm/aaaa)" pattern="[0-9]{2,2}\/[0-9]{2,2}\/[0-9]{4,4}"' +
+                    'value="' + dataNasc['dia'] + '/' + dataNasc['mes'] + '/' + dataNasc['ano'] + '"><br>';
+                contUser += '<span class="btn btn-square" id="btnUpdate" onclick="updateUserInfo()">' +
+                    'Atualizar dados</span>';
+                contUser += '</span>';
+                $('.container').append(contUser);
 
-            var contAltSenha = '<h4 class="titulo-bloco textleft">Alterar senha</h4><span class="textcontent">';
-            contAltSenha += '<input type="password" class="input input-full textcenter" id="senhaatual" ' +
-                'placeholder="Senha atual"><br>';
-            contAltSenha += '<input type="password" class="input input-full textcenter" id="novasenha" ' +
-                'placeholder="Nova senha"><br>';
-            contAltSenha += '<input type="password" class="input input-full textcenter" id="confirmacao" ' +
-                'placeholder="Repita a nova senha"><br>';
-            contAltSenha += '<span class="btn btn-square" id="btnChangePass" onclick="updateUserPassword()">' +
-                'Confirmar</span></span>';
-            $('#alterarsenha').append(contAltSenha);
+
+                $('body').append('<div class="bloco" id="alterarsenha"></div>');
+
+                var contAltSenha = '<h4 class="titulo-bloco textleft">Alterar senha</h4><span class="textcontent">';
+                contAltSenha += '<input type="password" class="input input-full textcenter" id="senhaatual" ' +
+                    'placeholder="Senha atual"><br>';
+                contAltSenha += '<input type="password" class="input input-full textcenter" id="novasenha" ' +
+                    'placeholder="Nova senha"><br>';
+                contAltSenha += '<input type="password" class="input input-full textcenter" id="confirmacao" ' +
+                    'placeholder="Repita a nova senha"><br>';
+                contAltSenha += '<span class="btn btn-square" id="btnChangePass" onclick="updateUserPassword()">' +
+                    'Confirmar</span></span>';
+                $('#alterarsenha').append(contAltSenha);
+            }
+            else { // Remove o bloco inicial caso não haja o que mostrar nele
+                $('.container').remove();
+            }
 
 
             $('body').append('<div class="bloco clickable" id="cadeu" onclick="window.open(\''+linkCadeu +
@@ -621,6 +624,11 @@ function getDadosUsuario () {
             contCad += '<b>Organize suas contas online</b><br>Conheça o Cadêu<br><br>' +
                 '<span class="mini gray">Toque aqui para acessar</span></span ';
             $('#cadeu').append(contCad);
+
+            // Adiciona a classe container ao bloco de divulgação para ajustá-lo ao layout
+            if(data.Cliente.oauth_uid !== '') {
+                $('#cadeu').addClass('container');
+            }
 
 
             $('body').append('<div class="bloco bloco-separador" id="logout"></div>');
@@ -797,7 +805,12 @@ function logout () {
         url: urlRaiz + '/api/user/logout',
         dataType: 'json',
         success: function(dados){
-            location.href='index.html';
+
+            // Inclui o arquivo de autenticação do FB, que fará o logout do Facebook e redirecionará
+            // para a index, mesmo se o login foi feito pelo sistema próprio de usuários
+            var fbcont = '<script src="assets/js/fbAuth.js"></script><div id="fb-root"></div>';
+            $(fbcont).insertBefore('#colorheader');
+
         },
         error: function(dados){
             console.log(dados);

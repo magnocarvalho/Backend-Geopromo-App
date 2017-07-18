@@ -31,17 +31,22 @@ function showLogin1Content (isLogged) {
         location.href='home.html';
 
     } else {
-        var conteudo = '<h2 class="colororange">Conecte-se para encontrar promoções próximas</h2>';
+        $('#fbArea').remove();
+        var fbcont = '<div id="fbArea"><script src="assets/js/fbAuth.js"></script><div id="fb-root"></div></div>';
+        $(fbcont).insertBefore('#colorheader');
+
+
+        var conteudo = '<span id="cont"><h2 class="colororange">Conecte-se para encontrar promoções próximas</h2>';
         conteudo += '<p>Conecte-se à sua conta ou crie uma nova.</p><br>';
         conteudo += '<input type="email" class="input input-full textcenter" id="emailLogin" ' +
             'placeholder="Informe seu email"><br>';
-        conteudo += '<span class="btn btn-square" id="btnContinuar" onclick="loginEmail($(\'#emailLogin\').val())">' +
-            'Continuar</span>';
+        conteudo += '<span id="btnArea"><span class="btn btn-square" id="btnContinuar" onclick="loginEmail($(\'#emailLogin\').val())">' +
+            'Continuar</span></span></span>';
 
-        conteudo += '<br><p>Ou então</p>';
+        conteudo += '<br><div id="fbLoginButton"><p>Ou então</p>';
         conteudo += '<div class="fb-login-button" data-max-rows="1" data-size="medium" ' +
             'data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" ' +
-            'data-use-continue-as="true" data-width="200"></div><br><br>';
+            'data-use-continue-as="false" data-width="200" onlogin="getFbUserData()"></div><br><br></div>';
 
         $('.textcontent').append(conteudo);
     }
@@ -85,8 +90,10 @@ function showLogin2Content (emailExistente) {
     } else {
         $('.btn').remove();
         $('.alert').remove();
-        $('h2').html('Este email não está cadastrado');
-        $('p').html('Você pode mudá-lo e tentar se conectar novamente ou pode se cadastrar usando este email.');
+        // var conteudo = '<h2 class="colororange">Este email não está cadastrado</h2>';
+        // conteudo += '<p>ocê pode mudá-lo e tentar se conectar novamente ou pode se cadastrar usando este email.</p><br>';
+        $('#cont h2').html('Este email não está cadastrado');
+        $('#cont p').html('Você pode mudá-lo e tentar se conectar novamente ou pode se cadastrar usando este email.');
 
         var conteudo = '<span class="btn btn-square btn-secundary" id="btnContinuar" ' +
             'onclick="loginEmail($(\'#emailLogin\').val())" ' +
@@ -96,7 +103,7 @@ function showLogin2Content (emailExistente) {
             'style="width:35%; margin-left:10px">' +
             'Cadastrar-se</span>';
 
-        $('.textcontent').append(conteudo);
+        $('#btnArea').html(conteudo);
     }
 }
 
@@ -132,7 +139,7 @@ function realizarLogin (senha) {
             data: {'senha': senha},
             success: function (data) {
                 $('.load-bottom').remove();
-                console.log(data);
+
                 if(data == -1){
                     $('.alert-erro').remove();
                     $('<span class="alert alert-erro">Muitas tentativas incorretas de acesso. Tente novamente após 2 ' +
