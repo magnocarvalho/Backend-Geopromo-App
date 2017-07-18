@@ -45,7 +45,7 @@ function showLogin1Content (isLogged) {
         conteudo += '<br><div id="fbLoginButton"><p>Ou então</p>';
         conteudo += '<div class="fb-login-button" data-max-rows="1" data-size="medium" ' +
             'data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" ' +
-            'data-use-continue-as="false" data-width="200" onlogin="fbLogin()"></div><br><br></div>';
+            'data-use-continue-as="false" data-width="200" onlogin="getFbUserData()"></div><br><br></div>';
 
         $('.textcontent').append(conteudo);
     }
@@ -138,7 +138,7 @@ function realizarLogin (senha) {
             data: {'senha': senha},
             success: function (data) {
                 $('.load-bottom').remove();
-                console.log(data);
+
                 if(data == -1){
                     $('.alert-erro').remove();
                     $('<span class="alert alert-erro">Muitas tentativas incorretas de acesso. Tente novamente após 2 ' +

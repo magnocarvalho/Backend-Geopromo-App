@@ -21,23 +21,19 @@ window.fbAsyncInit = function () {
              * Variável "action" é definida globalmente nos arquivos que incluem este (index.html e minhaconta.html)
              */
 
-            // Mostra um indicador de carregamento
-            $('body').append('<span class="loading-image load-bottom"></span>');
-
-            // Caso a variável action defina que está em login, realiza a busca dos dados do usuário do FB
-            if(action === 'login') {
-                getFbUserData();
-            }
-
             // Caso defina que está em logout, finaliza a sessão do FB depois de finalizada a sessão local
             // (quando este arquivo é chamado)
-            else if(action === 'logout') {
+            if(action === 'logout') {
+                // Mostra um indicador de carregamento
+                $('body').append('<span class="loading-image load-bottom"></span>');
+
                 FB.logout(function () {
                     location.href = 'index.html';
                 });
             }
 
         } else { // Caso não esteja conectado ao FB, simplesmente redireciona
+
             // Caso defina que está em logout, finaliza a sessão do FB depois de finalizada a sessão local
             // (quando este arquivo é chamado)
             if(action === 'logout') {
@@ -58,25 +54,9 @@ window.fbAsyncInit = function () {
 }(document, 'script', 'facebook-jssdk'));
 
 
-
-// Realiza o login no FB com o SDK JavaScript
-function fbLogin() {
-    // Mostra um indicador de carregamento
-    $('body').append('<span class="loading-image load-bottom"></span>');
-
-    FB.login(function (response) {
-        if (response.authResponse) {
-            getFbUserData();
-        } else { // Caso o usuário não autorize ou cancele o login
-            //alert('Não foi possível realizar o login com o Facebook');
-        }
-    });
-}
-
 function getFbUserData() {
     FB.api('/me', {locale: 'pt_BR', fields: 'id, first_name, last_name, email, birthday, gender, locale, picture'},
         function (response) {
-            console.log(response);
             // Save user data
             saveFBUserData(response);
         });
